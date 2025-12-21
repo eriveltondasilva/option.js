@@ -69,9 +69,9 @@ match<U>(handlers: { some: (value: T) => U; none: () => U }): U
 
 ```typescript
 const result = Option.from(findUser(id))
-  .filter(user => user.active)
-  .map(user => user.email)
-  .unwrapOr('no-email@example.com');
+  .filter((user) => user.active)
+  .map((user) => user.email)
+  .unwrapOr('no-email@example.com')
 ```
 
 ## Testes Essenciais
