@@ -5,6 +5,7 @@ Biblioteca inspirada no `Option` do Rust para tratamento seguro de valores opcio
 ## Conceito
 
 `Option<T>` encapsula valores que podem ou não existir:
+
 - **Some(value)**: contém um valor
 - **None**: ausência de valor
 
@@ -13,6 +14,7 @@ Elimina `null` e `undefined` explícitos, tornando a ausência de valores type-s
 ## Arquitetura
 
 A lib é composta por:
+
 - **Classe `Some<T>`**: representa a presença de um valor
 - **Classe `None<T>`**: representa a ausência de valor
 - **Namespace/Objeto `Option`**: factory methods e utilitários
@@ -95,4 +97,4 @@ const result = Option.from(findUser(id))
 2. Siga princípios funcionais (imutabilidade, composição)
 3. Adicione testes para novos métodos
 4. Mantenha consistência com a API do Rust quando possível
-5. mantenha o código e comentários em inglês 
+5. mantenha o código e comentários em inglês
