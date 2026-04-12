@@ -5,5 +5,5 @@
   "printWidth": 100,
   "tabWidth": 2,
   "experimentalTernaries": true,
-  "plugins": ["@trivago/prettier-plugin-sort-imports", "prettier-plugin-packagejson"]
+  "plugins": ["prettier-plugin-packagejson"]
 }

@@ -1,5 +1,6 @@
-import { banner } from './src/banner'
 import { defineConfig } from 'tsup'
+
+import { banner } from './src/banner'
 
 export default defineConfig([
   {

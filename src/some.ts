@@ -1,5 +1,6 @@
 // importado aqui para evitar circular reference
 import { none } from './none'
+
 import type { None, Option, Some as ISome } from './types'
 
 export class Some<T> implements ISome<T> {
