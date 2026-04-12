@@ -1,4 +1,4 @@
-import pkg from '../package.json' with { type: 'json' }
+import pkg from '../package.json'
 
 const { name, description, version, author, license, homepage } = pkg
 const year = new Date().getFullYear()

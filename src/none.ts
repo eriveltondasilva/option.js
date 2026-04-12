@@ -1,0 +1,81 @@
+import type { None as INone, Option, Some } from './types'
+
+class NoneClass implements INone {
+  readonly _tag = 'None'
+
+  isSome(): this is Some<never> {
+    return false
+  }
+
+  isNone(): this is NoneClass {
+    return true
+  }
+
+  isSomeAnd(_predicate: (value: never) => boolean): boolean {
+    return false
+  }
+
+  isNoneOr(_predicate: (value: never) => boolean): boolean {
+    return true
+  }
+
+  unwrap(): never {
+    throw new ReferenceError('Called unwrap() on a None value')
+  }
+
+  expect(message: string): never {
+    throw new ReferenceError(message)
+  }
+
+  unwrapOr<U>(defaultValue: U): U {
+    return defaultValue
+  }
+
+  unwrapOrElse<U>(fn: () => U): U {
+    return fn()
+  }
+
+  map<U>(_fn: (value: never) => U): Option<U> {
+    return this
+  }
+
+  mapOr<U>(defaultValue: U, _fn: (value: never) => U): U {
+    return defaultValue
+  }
+
+  mapOrElse<U>(defaultFn: () => U, _fn: (value: never) => U): U {
+    return defaultFn()
+  }
+
+  flatMap<U>(_fn: (value: never) => Option<U>): Option<U> {
+    return this
+  }
+
+  filter(_predicate: (value: never) => boolean): Option<never> {
+    return this
+  }
+
+  or<U>(other: Option<U>): Option<U> {
+    return other
+  }
+
+  orElse<U>(fn: () => Option<U>): Option<U> {
+    return fn()
+  }
+
+  match<U>(patterns: { some: (value: never) => U; none: () => U }): U {
+    return patterns.none()
+  }
+
+  toNullable(): null {
+    return null
+  }
+
+  toUndefined(): undefined {
+    return undefined
+  }
+}
+
+// Singleton — None é imutável e não carrega estado
+export const none = new NoneClass()
+export type { NoneClass as None }
