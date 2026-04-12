@@ -9,7 +9,7 @@ export default defineConfig([
     treeshake: true,
     dts: true,
     cjsInterop: true,
-    format: ['esm', 'cjs'],
+    format: ['esm'],
     banner: {
       js: banner,
     },
