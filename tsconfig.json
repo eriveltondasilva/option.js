@@ -3,14 +3,14 @@
     // Environment setup & latest features
     "lib": ["ESNext"],
     "target": "ESNext",
-    // "module": "Preserve",
+    "module": "Preserve",
     "moduleDetection": "force",
     "jsx": "react-jsx",
     "allowJs": true,
     "types": ["bun"],
 
     // Bundler mode
-    // "moduleResolution": "bundler",
+    "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "noEmit": true,
@@ -28,9 +28,6 @@
     "noPropertyAccessFromIndexSignature": true,
 
     //
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-
     "rootDir": "./src",
     "outDir": "./dist",
     "paths": {

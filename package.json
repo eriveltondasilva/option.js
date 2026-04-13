@@ -1,9 +1,13 @@
 {
   "name": "@eriveltonsilva/option.js",
   "version": "1.0.0",
-  "description": "",
+  "description": "Biblioteca inspirada no `Option` do Rust para tratamento seguro de valores opcionais.",
   "keywords": [
-    "option.js"
+    "option.js",
+    "option",
+    "rust",
+    "rust-like",
+    "rusty"
   ],
   "homepage": "https://github.com/eriveltonsilva/option.js",
   "repository": {
@@ -21,12 +25,11 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
-      "require": "./dist/index.cjs",
       "default": "./dist/index.js"
     },
     "./package.json": "./package.json"
   },
-  "main": "./dist/index.cjs",
+  "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
@@ -35,16 +38,14 @@
   "scripts": {
     "build": "bunx --bun tsup",
     "dev": "bun run index.ts",
-    "fmt": "bunx prettier . --write --cache",
-    "fmt:check": "bunx prettier . --check --cache",
+    "fix": "bun run types && bun run fmt:fix && bun run lint:fix",
+    "fmt": "bunx prettier . --check",
+    "fmt:fix": "bunx prettier . --write --cache",
     "lint": "bunx eslint .",
     "lint:fix": "bunx eslint . --fix --cache",
     "prepare": "husky",
     "prepublishOnly": "npm run build",
-    "start": "node dist/index.js",
-    "test": "vitest run",
-    "test:dev": "vitest watch",
-    "typecheck": "tsc --noEmit"
+    "types": "tsc --noEmit"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -59,8 +60,7 @@
     "prettier-plugin-packagejson": "^3.0.2",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.58.1",
-    "vitest": "^4.1.4"
+    "typescript-eslint": "^8.58.1"
   },
   "packageManager": "bun@1.0.0+",
   "engines": {

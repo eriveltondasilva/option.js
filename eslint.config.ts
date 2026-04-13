@@ -83,17 +83,14 @@ export default defineConfig([
   },
 
   // ── Test files overrides ───────────────────────────────────────────────────
-  // {
-  //   files: ['**/*.test.ts', '**/*.spec.ts'],
-  //   rules: {
-  //     // Allow default exports in test files (Vitest test suites)
-  //     // 'import-x/no-default-export': 'off',
-  //     // Allow unused modules in test files
-  //     // 'import-x/no-unused-modules': 'off',
-  //     // Allow explicit any in tests when needed
-  //     // '@typescript-eslint/no-explicit-any': 'warn',
-  //   },
-  // },
+  {
+    files: ['**/*.test.ts', '**/*.spec.ts'],
+    rules: {
+      'import-x/no-unresolved': ['off', { devDependencies: true }],
+      'import-x/no-unused-modules': 'off',
+      '@typescript-eslint/no-explicit-any': 'warn',
+    },
+  },
 
   prettier,
 ])

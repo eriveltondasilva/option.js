@@ -4,16 +4,16 @@ import pkg from './package.json'
 
 const { name, description, version, author, license, homepage } = pkg
 const year = new Date().getFullYear()
+const minify = process.env.NODE_ENV === 'production'
 
 export const banner = `/**
  * ${name.toUpperCase()} - v${version}
  *
- * ${description}
+ * ${description || 'no description'}
  *
  * @author ${author.name} <${author.email}>
  * @license ${license.toUpperCase()}
  * @copyright ${year} ${author.name}
- * @version ${version}
  *
  * @see ${homepage} - Documentation
  *
@@ -32,5 +32,6 @@ export default defineConfig([
     sourcemap: true,
     clean: true,
     dts: true,
+    minify,
   },
 ])
