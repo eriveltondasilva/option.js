@@ -7,7 +7,7 @@ import type { Option as IOption } from './types'
  * Creates an Option from a value.
  */
 function some<T>(value: T): IOption<T> {
-  return new Some(value as NonNullable<T>)
+  return new Some(value)
 }
 
 /**
@@ -15,7 +15,7 @@ function some<T>(value: T): IOption<T> {
  * null | undefined → None, otherwise → Some(value)
  */
 function from<T>(value: T | null | undefined): IOption<NonNullable<T>> {
-  return value == null ? None : new Some(value)
+  return value == null ? None : new Some(value as NonNullable<T>)
 }
 
 /**

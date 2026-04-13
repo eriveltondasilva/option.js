@@ -34,11 +34,11 @@ export class Some<T> implements ISome<T> {
     return this.value
   }
 
-  unwrapOr<U>(_defaultValue: U): T | U {
+  unwrapOr<U>(_defaultValue: U): T {
     return this.value
   }
 
-  unwrapOrElse<U>(_fn: () => U): T | U {
+  unwrapOrElse<U>(_fn: () => U): T {
     return this.value
   }
 
