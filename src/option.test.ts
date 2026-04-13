@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'bun:test'
 
+import { NoneUnwrapError } from './errors'
 import { Option } from './option'
 
 describe('Option.Some', () => {
@@ -33,7 +34,7 @@ describe('Option.Some', () => {
 
 describe('Option.None', () => {
   it('should throw on unwrap', () => {
-    expect(() => Option.None.unwrap()).toThrow(ReferenceError)
+    expect(() => Option.None.unwrap()).toThrow(NoneUnwrapError)
   })
 
   it('should return default on unwrapOr', () => {

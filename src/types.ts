@@ -25,6 +25,10 @@ export interface OptionMethods<T> {
   // Pattern matching
   match<U>(patterns: { some: (value: T) => U; none: () => U }): U
 
+  inspect(fn: (value: T) => void): Option<T>
+
+  flatten<U>(this: Option<Option<U>>): Option<U>
+
   // Conversão
   toNullable(): T | null
   toUndefined(): T | undefined

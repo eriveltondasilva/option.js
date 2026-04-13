@@ -1,4 +1,4 @@
-import { none } from './none'
+import { None } from './none'
 import { Some } from './some'
 
 import type { Option as IOption } from './types'
@@ -7,7 +7,7 @@ import type { Option as IOption } from './types'
  * Creates an Option from a value.
  */
 function some<T>(value: T): IOption<T> {
-  return new Some(value)
+  return new Some(value as NonNullable<T>)
 }
 
 /**
@@ -15,7 +15,7 @@ function some<T>(value: T): IOption<T> {
  * null | undefined → None, otherwise → Some(value)
  */
 function from<T>(value: T | null | undefined): IOption<NonNullable<T>> {
-  return value == null ? none : new Some(value)
+  return value == null ? None : new Some(value)
 }
 
 /**
@@ -28,13 +28,13 @@ function isSome<T>(option: IOption<T>): option is Some<T> {
 /**
  * Type guard — checks if option is None
  */
-function isNone<T>(option: IOption<T>): option is typeof none {
+function isNone<T>(option: IOption<T>): option is typeof None {
   return option._tag === 'None'
 }
 
 export const Option = {
   Some: some,
-  None: none,
+  None,
   from,
   isSome,
   isNone,

@@ -1,3 +1,5 @@
+import { NoneUnwrapError } from './errors'
+
 import type { None as INone, Option, Some } from './types'
 
 class NoneClass implements INone {
@@ -20,11 +22,11 @@ class NoneClass implements INone {
   }
 
   unwrap(): never {
-    throw new ReferenceError('Called unwrap() on a None value')
+    throw new NoneUnwrapError()
   }
 
   expect(message: string): never {
-    throw new ReferenceError(message)
+    throw new NoneUnwrapError(message)
   }
 
   unwrapOr<U>(defaultValue: U): U {
@@ -67,6 +69,14 @@ class NoneClass implements INone {
     return patterns.none()
   }
 
+  inspect(_fn: (value: never) => void): Option<never> {
+    return this
+  }
+
+  flatten(): Option<never> {
+    return this
+  }
+
   toNullable(): null {
     return null
   }
@@ -77,5 +87,5 @@ class NoneClass implements INone {
 }
 
 // Singleton — None é imutável e não carrega estado
-export const none = new NoneClass()
-export type { NoneClass as None }
+export const None = new NoneClass()
+export type None = typeof None

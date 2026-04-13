@@ -1,4 +1,4 @@
-import { Option } from '.'
+import { Option, } from '.'
 
 // Criação
 const a = Option.Some(42)
@@ -35,3 +35,5 @@ a.match({
 // Conversão
 a.toNullable() // 42 | null
 a.toUndefined() // 42 | undefined
+
+//

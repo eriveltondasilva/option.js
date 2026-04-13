@@ -1,6 +1,6 @@
-import { none } from './none'
+import { None } from './none'
 
-import type { None, Option, Some as ISome } from './types'
+import type { None as INone, Option, Some as ISome } from './types'
 
 export class Some<T> implements ISome<T> {
   readonly _tag = 'Some'
@@ -14,7 +14,7 @@ export class Some<T> implements ISome<T> {
     return true
   }
 
-  isNone(): this is None {
+  isNone(): this is INone {
     return false
   }
 
@@ -34,11 +34,11 @@ export class Some<T> implements ISome<T> {
     return this.value
   }
 
-  unwrapOr(_defaultValue: unknown): T {
+  unwrapOr<U>(_defaultValue: U): T | U {
     return this.value
   }
 
-  unwrapOrElse(_fn: () => unknown): T {
+  unwrapOrElse<U>(_fn: () => U): T | U {
     return this.value
   }
 
@@ -59,7 +59,7 @@ export class Some<T> implements ISome<T> {
   }
 
   filter(predicate: (value: T) => boolean): Option<T> {
-    return predicate(this.value) ? this : none
+    return predicate(this.value) ? this : None
   }
 
   or<U>(_other: Option<U>): Option<T> {
@@ -72,6 +72,15 @@ export class Some<T> implements ISome<T> {
 
   match<U>(patterns: { some: (value: T) => U; none: () => U }): U {
     return patterns.some(this.value)
+  }
+
+  inspect(fn: (value: T) => void): Option<T> {
+    fn(this.value)
+    return this
+  }
+
+  flatten<U>(this: Some<Option<U>>): Option<U> {
+    return this.value
   }
 
   toNullable(): T {

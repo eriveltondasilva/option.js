@@ -38,7 +38,7 @@
   "scripts": {
     "build": "bunx --bun tsup",
     "dev": "bun run index.ts",
-    "fix": "bun run types && bun run fmt:fix && bun run lint:fix",
+    "fix": "bun run types && bun run lint:fix && bun run fmt:fix",
     "fmt": "bunx prettier . --check",
     "fmt:fix": "bunx prettier . --write --cache",
     "lint": "bunx eslint .",
