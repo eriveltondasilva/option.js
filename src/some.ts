@@ -1,4 +1,3 @@
-// importado aqui para evitar circular reference
 import { none } from './none'
 
 import type { None, Option, Some as ISome } from './types'
@@ -35,11 +34,11 @@ export class Some<T> implements ISome<T> {
     return this.value
   }
 
-  unwrapOr<U>(_defaultValue: U): T {
+  unwrapOr(_defaultValue: unknown): T {
     return this.value
   }
 
-  unwrapOrElse<U>(_fn: () => U): T {
+  unwrapOrElse(_fn: () => unknown): T {
     return this.value
   }
 

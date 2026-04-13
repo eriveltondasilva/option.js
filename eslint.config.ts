@@ -1,79 +1,99 @@
 import eslint from '@eslint/js'
 import { defineConfig } from 'eslint/config'
 import prettier from 'eslint-config-prettier'
-import importPlugin from 'eslint-plugin-import-x'
+import { importX } from 'eslint-plugin-import-x'
 import globals from 'globals'
 import tseslint from 'typescript-eslint'
 
 export default defineConfig([
-  { ignores: ['dist/**', 'node_modules/**'] },
-
-  eslint.configs.recommended,
-
-  tseslint.configs.strict,
-  tseslint.configs.stylistic,
+  { ignores: ['node_modules/**', 'dist/**', '*.config.*'] },
 
   {
     files: ['**/*.{ts,mts,cts}'],
 
-    plugins: {
-      import: importPlugin,
-    },
+    extends: [
+      eslint.configs.recommended,
+      tseslint.configs.strictTypeChecked,
+      tseslint.configs.stylisticTypeChecked,
+    ],
 
     languageOptions: {
-      parser: tseslint.parser,
-      globals: globals.bunBuiltin,
-    },
-
-    settings: {
-      'import/resolver': {
-        typescript: true,
+      parserOptions: {
+        projectService: true,
+        // @ts-ignore: ignora erro de typescript
+        tsconfigRootDir: import.meta.dirname,
       },
+      globals: { ...globals.bunBuiltin },
     },
-
     rules: {
-      // TS
-      'no-unused-vars': 'off',
+      // Permite variáveis que comecem com `_`
       '@typescript-eslint/no-unused-vars': [
-        'warn',
-        {
-          argsIgnorePattern: '^_',
-          varsIgnorePattern: '^_',
-          caughtErrorsIgnorePattern: '^_',
-        },
+        'error',
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_' },
       ],
 
-      // import
-      'import/order': [
+      '@typescript-eslint/prefer-nullish-coalescing': 'warn',
+      '@typescript-eslint/prefer-optional-chain': 'warn',
+      '@typescript-eslint/no-unnecessary-type-assertion': 'warn',
+    },
+  },
+
+  {
+    plugins: {
+      'import-x': importX,
+    },
+    settings: {
+      'import-x/resolver': {
+        typescript: {
+          alwaysTryTypes: true,
+          project: './tsconfig.json',
+        },
+      },
+    },
+    rules: {
+      'import-x/order': [
         'warn',
         {
           groups: [['builtin', 'external'], 'internal', ['parent', 'sibling', 'index'], 'type'],
           'newlines-between': 'always',
-          alphabetize: {
-            order: 'asc',
-            caseInsensitive: true,
-          },
+          alphabetize: { order: 'asc', caseInsensitive: true },
         },
       ],
 
-      'import/no-duplicates': 'warn',
-      'import/newline-after-import': 'warn',
+      'import-x/no-duplicates': 'warn',
+      'import-x/no-unresolved': 'error',
+      'import-x/no-self-import': 'error',
+      'import-x/no-useless-path-segments': 'warn',
+      'import-x/no-mutable-exports': 'error',
 
-      'import/no-unresolved': 'error',
-      'import/named': 'error',
-      'import/default': 'error',
-      'import/namespace': 'error',
+      'import-x/first': 'error',
+      'import-x/newline-after-import': 'warn',
 
-      'import/no-cycle': 'warn',
-      'import/no-self-import': 'error',
-      'import/no-useless-path-segments': 'warn',
+      'import-x/consistent-type-specifier-style': ['warn', 'prefer-top-level'],
+      'import-x/no-extraneous-dependencies': [
+        'error',
+        {
+          devDependencies: ['**/*.test.ts', '**/*.spec.ts', 'vitest.config.*'],
+        },
+      ],
 
-      'import/first': 'error',
-      'import/no-mutable-exports': 'error',
-
-      'import/consistent-type-specifier-style': ['warn', 'prefer-top-level'],
+      // Disabled: high performance cost — run manually if needed
+      // 'import-x/no-cycle': 'warn',
     },
   },
+
+  // ── Test files overrides ───────────────────────────────────────────────────
+  // {
+  //   files: ['**/*.test.ts', '**/*.spec.ts'],
+  //   rules: {
+  //     // Allow default exports in test files (Vitest test suites)
+  //     // 'import-x/no-default-export': 'off',
+  //     // Allow unused modules in test files
+  //     // 'import-x/no-unused-modules': 'off',
+  //     // Allow explicit any in tests when needed
+  //     // '@typescript-eslint/no-explicit-any': 'warn',
+  //   },
+  // },
 
   prettier,
 ])
