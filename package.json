@@ -45,6 +45,7 @@
     "lint:fix": "bunx eslint . --fix --cache",
     "prepare": "husky",
     "prepublishOnly": "npm run build",
+    "test": "vitest run",
     "types": "tsc --noEmit"
   },
   "devDependencies": {
@@ -61,7 +62,8 @@
     "prettier-plugin-packagejson": "^3.0.2",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.58.2"
+    "typescript-eslint": "^8.58.2",
+    "vitest": "^4.1.4"
   },
   "packageManager": "bun@1.0.0+",
   "engines": {

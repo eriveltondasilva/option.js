@@ -6,7 +6,7 @@ import globals from 'globals'
 import tseslint from 'typescript-eslint'
 
 export default defineConfig([
-  { ignores: ['node_modules/**', 'dist/**', '*.config.*'] },
+  { ignores: ['node_modules/**', 'dist/**', '*.config.*', '__tests__/**'] },
 
   {
     files: ['**/*.{ts,mts,cts}'],
@@ -34,8 +34,8 @@ export default defineConfig([
 
       '@typescript-eslint/prefer-nullish-coalescing': 'warn',
       '@typescript-eslint/prefer-optional-chain': 'warn',
-      '@typescript-eslint/no-unnecessary-type-assertion': 'warn',
-      '@typescript-eslint/no-unnecessary-type-parameter': 'warn',
+      '@typescript-eslint/no-unnecessary-type-parameters': 'off',
+      '@typescript-eslint/no-unnecessary-type-assertion': 'off',
     },
   },
 
@@ -84,14 +84,14 @@ export default defineConfig([
   },
 
   // ── Test files overrides ───────────────────────────────────────────────────
-  {
-    files: ['**/*.test.ts', '**/*.spec.ts'],
-    rules: {
-      'import-x/no-unresolved': ['off', { devDependencies: true }],
-      'import-x/no-unused-modules': 'off',
-      '@typescript-eslint/no-explicit-any': 'warn',
-    },
-  },
+  // {
+  //   files: ['**/*.test.ts', '**/*.spec.ts'],
+  //   rules: {
+  //     'import-x/no-unresolved': ['off', { devDependencies: true }],
+  //     'import-x/no-unused-modules': 'off',
+  //     '@typescript-eslint/no-explicit-any': 'warn',
+  //   },
+  // },
 
   prettier,
 ])

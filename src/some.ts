@@ -46,11 +46,11 @@ export class Some<T> implements ISome<T> {
     return new Some(fn(this.value))
   }
 
-  mapOr<U>(_defaultValue: U, fn: (value: T) => U): U {
+  mapOr<U>(fn: (value: T) => U, _defaultValue: U): U {
     return fn(this.value)
   }
 
-  mapOrElse<U>(_defaultFn: () => U, fn: (value: T) => U): U {
+  mapOrElse<U>( fn: (value: T) => U, _defaultFn: () => U): U {
     return fn(this.value)
   }
 

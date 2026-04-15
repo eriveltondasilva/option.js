@@ -13,8 +13,8 @@ export interface OptionMethods<T> {
 
   // Transformação
   map<U>(fn: (value: T) => U): Option<U>
-  mapOr<U>(defaultValue: U, fn: (value: T) => U): U
-  mapOrElse<U>(defaultFn: () => U, fn: (value: T) => U): U
+  mapOr<U>(fn: (value: T) => U, defaultValue: U): U
+  mapOrElse<U>(fn: (value: T) => U, defaultFn: () => U): U
   filter(predicate: (value: T) => boolean): Option<T>
   flatten<U>(this: Option<Option<U>>): Option<U>
 
@@ -27,7 +27,6 @@ export interface OptionMethods<T> {
   // Inspeção
   match<U>(patterns: { some: (value: T) => U; none: () => U }): U
   inspect(fn: (value: T) => void): Option<T>
-
 
   // Conversão
   toNullable(): T | null

@@ -41,11 +41,11 @@ class NoneClass implements INone {
     return this
   }
 
-  mapOr<U>(defaultValue: U, _fn: (value: never) => U): U {
+  mapOr<U>(_fn: (value: never) => U, defaultValue: U): U {
     return defaultValue
   }
 
-  mapOrElse<U>(defaultFn: () => U, _fn: (value: never) => U): U {
+  mapOrElse<U>(_fn: (value: never) => U, defaultFn: () => U): U {
     return defaultFn()
   }
 

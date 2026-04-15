@@ -15,7 +15,7 @@ function some<T>(value: T): IOption<T> {
  * null | undefined → None, otherwise → Some(value)
  */
 function from<T>(value: T | null | undefined): IOption<NonNullable<T>> {
-  return value == null ? None : new Some(value as NonNullable<T>)
+  return value == null ? None : new Some(value)
 }
 
 /**
@@ -33,7 +33,7 @@ function isNone<T>(option: IOption<T>): option is typeof None {
 }
 
 export const Option = {
-  none:None,
+  none: None,
   some,
   from,
   isSome,
