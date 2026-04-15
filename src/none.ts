@@ -49,7 +49,7 @@ class NoneClass implements INone {
     return defaultFn()
   }
 
-  flatMap<U>(_fn: (value: never) => Option<U>): Option<U> {
+  andThen<U>(_fn: (value: never) => Option<U>): Option<U> {
     return this
   }
 

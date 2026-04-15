@@ -15,19 +15,19 @@ export interface OptionMethods<T> {
   map<U>(fn: (value: T) => U): Option<U>
   mapOr<U>(defaultValue: U, fn: (value: T) => U): U
   mapOrElse<U>(defaultFn: () => U, fn: (value: T) => U): U
-  flatMap<U>(fn: (value: T) => Option<U>): Option<U>
   filter(predicate: (value: T) => boolean): Option<T>
+  flatten<U>(this: Option<Option<U>>): Option<U>
 
   // Alternativas
+  // and<U>(other: Option<U>): Option<U>
+  andThen<U>(fn: (value: T) => Option<U>): Option<U>
   or<U>(other: Option<U>): Option<T | U>
   orElse<U>(fn: () => Option<U>): Option<T | U>
 
-  // Pattern matching
+  // Inspeção
   match<U>(patterns: { some: (value: T) => U; none: () => U }): U
-
   inspect(fn: (value: T) => void): Option<T>
 
-  flatten<U>(this: Option<Option<U>>): Option<U>
 
   // Conversão
   toNullable(): T | null

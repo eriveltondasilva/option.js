@@ -1,8 +1,8 @@
-import { Option, } from '.'
+import { Option } from '.'
 
 // Criação
-const a = Option.Some(42)
-const b = Option.None
+const a = Option.some(42)
+const b = Option.none
 // const c = Option.from(maybeNull)       // T | null | undefined → Option<T>
 
 // Verificação
@@ -19,12 +19,12 @@ a.unwrapOrElse(() => 0) // 42
 // Transformação
 a.map((val) => val * 2) // Some(84)
 a.mapOr(0, (val) => val * 2) // 84
-a.flatMap((val) => Option.Some(val + 1)) // Some(43)
+a.andThen((val) => Option.some(val + 1)) // Some(43)
 a.filter((val) => val > 100) // None
 
 // Alternativas
-b.or(Option.Some(99)) // Some(99)
-b.orElse(() => Option.Some(99)) // Some(99)
+b.or(Option.some(99)) // Some(99)
+b.orElse(() => Option.some(99)) // Some(99)
 
 // Pattern matching
 a.match({

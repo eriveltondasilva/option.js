@@ -7,7 +7,7 @@ import type { Option as IOption } from './types'
  * Creates an Option from a value.
  */
 function some<T>(value: T): IOption<T> {
-  return new Some(value)
+  return new Some<T>(value)
 }
 
 /**
@@ -33,8 +33,8 @@ function isNone<T>(option: IOption<T>): option is typeof None {
 }
 
 export const Option = {
-  Some: some,
-  None,
+  none:None,
+  some,
   from,
   isSome,
   isNone,
