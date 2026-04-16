@@ -1,7 +1,7 @@
 {
   "name": "@eriveltonsilva/option.js",
   "version": "1.0.0",
-  "description": "Biblioteca inspirada no `Option` do Rust para tratamento seguro de valores opcionais.",
+  "description": "A lightweight, type-safe library inspired by Rust's `Option` enum for handling optional values in JavaScript and TypeScript without `null` or `undefined` pitfalls.",
   "keywords": [
     "option.js",
     "option",
