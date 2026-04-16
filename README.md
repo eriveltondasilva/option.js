@@ -1,100 +1,115 @@
-# Option.js
+# @eriveltonsilva/option.js
 
-Biblioteca inspirada no `Option` do Rust para tratamento seguro de valores opcionais.
+A lightweight, type-safe library inspired by Rust's `Option` enum for handling optional values in JavaScript and TypeScript without `null` or `undefined` pitfalls.
 
-## Conceito
+## 🚀 Features
 
-`Option<T>` encapsula valores que podem ou não existir:
+- **Type Safety**: Prevents "cannot read property of null" errors by forcing explicit handling of absent values.
+- **Functional API**: Chainable methods like `map`, `andThen`, `filter`, `and`, and more.
+- **Singleton None**: Memory-efficient `None` implementation using a singleton pattern.
+- **Modern Stack**: Built with TypeScript, optimized with `tsup`, and tested with `vitest`.
+- **Zero Dependencies**: Extremely lightweight.
 
-- **Some(value)**: contém um valor
-- **None**: ausência de valor
+## 📦 Installation
 
-Elimina `null` e `undefined` explícitos, tornando a ausência de valores type-safe.
+```bash
+# Using npm
+npm install @eriveltonsilva/option.js
 
-## Arquitetura
+# Using bun
+bun add @eriveltonsilva/option.js
+````
 
-A lib é composta por:
+## 🛠 Usage
 
-- **Classe `Some<T>`**: representa a presença de um valor
-- **Classe `None<T>`**: representa a ausência de valor
-- **Namespace/Objeto `Option`**: factory methods e utilitários
-
-## Estrutura da API
-
-### Construtores
+### Basic Example
 
 ```typescript
-some<T>(value: T): Option<T>
-none<T>(): Option<T>
-from<T>(value: T | null | undefined): Option<T>
+import { option as Option } from '@eriveltonsilva/option.js';
+
+function getUsername(id: number) {
+  const users = { 1: "Erivelton" };
+  return Option.fromNullable(users[id]);
+}
+
+const user = getUsername(1)
+  .map(name => name.toUpperCase())
+  .unwrapOr("ANONYMOUS");
+
+console.log(user); // => "ERIVELTON"
 ```
 
-### Verificação
+### Chaining with `and()` and `andThen()`
 
 ```typescript
-isSome(): boolean
-isNone(): boolean
-```
+const some = Option.some(10);
+const other = Option.some(20);
 
-### Extração
+// Returns 'other' only if 'some' is Some
+const result = some.and(other);
 
-```typescript
-unwrap(): T  // throws se None
-unwrapOr(defaultValue: T): T
-unwrapOrElse(fn: () => T): T
-```
-
-### Transformação
-
-```typescript
-map<U>(fn: (value: T) => U): Option<U>
-flatMap<U>(fn: (value: T) => Option<U>): Option<U>
-filter(predicate: (value: T) => boolean): Option<T>
+// Chain operations that return Options
+const asyncStyle = some.andThen(val => Option.some(val * 2));
 ```
 
 ### Pattern Matching
 
 ```typescript
-match<U>(handlers: { some: (value: T) => U; none: () => U }): U
+const maybeValue = Option.fromNullable(someData);
+
+const message = maybeValue.match({
+  some: (val) => `Found: ${val}`,
+  none: () => "Nothing here"
+});
 ```
 
-## Princípios de Implementação
+## 📖 API Overview
 
-1. **Imutabilidade**: os métodos retornam novas instâncias
-2. **Type Safety**: constructor privado, criação via métodos estáticos
-3. **Null Safety**: `some()` rejeita null/undefined
-4. **Composição**: métodos encadeáveis para programação funcional
+### Factories
 
-## Exemplo de Uso
+  - `Option.some(value)`: Wraps a value.
+  - `Option.none`: The singleton instance for absent values.
+  - `Option.fromNullable(val)`: Safely converts `null` | `undefined` to `None`.
+
+### Guards
+
+  - `Option.isOption(val)`: Checks if a value is an instance of `Some` or `None`.
+  - `Option.isSome(val)`: Type guard for `Some`.
+  - `Option.isNone(val)`: Type guard for `None`.
+
+### Key Instance Methods
+
+| Method             | Description                                         |
+| :----------------- | :-------------------------------------------------- |
+| `.map(fn)`         | Transforms the value inside a `Some`.               |
+| `.and(other)`      | Returns `other` if instance is `Some`, else `None`. |
+| `.andThen(fn)`     | Returns the Option resulting from `fn` if `Some`.   |
+| `.unwrapOr(alt)`   | Returns value or the provided fallback.             |
+| `.match(patterns)` | Executes a branch based on the state.               |
+| `.inspect(fn)`     | Runs a side-effect without changing the Option.     |
+
+## 📄 License
+
+MIT © [Erivelton Silva](https://www.google.com/search?q=https://github.com/eriveltonsilva)
+
+---
+
+## 🔗 Related Projects
+
+If you find this library useful, check out my other functional utilities:
+
+* **[@eriveltonsilva/result.js](https://github.com/eriveltonsilva/result.js)** - A type-safe way to handle errors and successes without `try/catch` overhead, inspired by Rust's `Result` type.
 
 ```typescript
-const result = Option.from(findUser(id))
-  .filter((user) => user.active)
-  .map((user) => user.email)
-  .unwrapOr('no-email@example.com')
+import { Option } from '@eriveltonsilva/option.js';
+import { Result } from '@eriveltonsilva/result.js';
+
+const user = Option.fromNullable(null); // => None
+
+// Converting an Option to a Result (conceptually)
+const userResult = user.match({
+  some: (val) => Result.ok(val),
+  none: () => Result.err("User not found")
+});
+// => Err("User not found")
 ```
-
-## Testes Essenciais
-
-- Criação: `some`, `none`, `from` com diversos tipos
-- Verificação: `isSome` e `isNone` em ambos estados
-- Extração: `unwrap` com Some/None, `unwrapOr`, `unwrapOrElse`
-- Transformação: `map`, `flatMap`, `filter` preservando imutabilidade
-- Edge cases: null, undefined, valores falsy
-
-## Roadmap
-
-- [ ] Métodos básicos (some, none, unwrap, map)
-- [ ] Pattern matching
-- [ ] Testes unitários
-- [ ] Métodos adicionais (and, or, xor)
-- [ ] Integração com Result
-- [ ] Documentação completa
-
-## Contribuindo
-
-1. Mantenha a simplicidade e foco na API principal
-2. Siga princípios funcionais (imutabilidade, composição)
-3. Adicione testes para novos métodos
-4. Mantenha consistência com a API do Rust quando possível
-5. mantenha o código e comentários em inglês
