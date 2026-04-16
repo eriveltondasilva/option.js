@@ -2,14 +2,14 @@ import { NoneUnwrapError } from './errors'
 
 import type { None as INone, Option, Some } from './types'
 
-class NoneClass implements INone {
+class None implements INone {
   readonly _tag = 'None'
 
   isSome(): this is Some<never> {
     return false
   }
 
-  isNone(): this is NoneClass {
+  isNone(): this is INone {
     return true
   }
 
@@ -80,12 +80,7 @@ class NoneClass implements INone {
   toNullable(): null {
     return null
   }
-
-  toUndefined(): undefined {
-    return undefined
-  }
 }
 
 // Singleton — None é imutável e não carrega estado
-export const None = new NoneClass()
-export type None = typeof None
+export const NoneClass = new None()

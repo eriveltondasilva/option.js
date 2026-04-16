@@ -1,4 +1,4 @@
-import { None } from './none'
+import { NoneClass as None } from './none'
 
 import type { None as INone, Option, Some as ISome } from './types'
 
@@ -84,10 +84,6 @@ export class Some<T> implements ISome<T> {
   }
 
   toNullable(): T {
-    return this.value
-  }
-
-  toUndefined(): T {
     return this.value
   }
 }

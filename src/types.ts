@@ -30,7 +30,6 @@ export interface OptionMethods<T> {
 
   // Conversão
   toNullable(): T | null
-  toUndefined(): T | undefined
 }
 
 export interface Some<T> extends OptionMethods<T> {
