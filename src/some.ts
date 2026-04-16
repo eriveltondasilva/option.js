@@ -54,6 +54,10 @@ export class Some<T> implements ISome<T> {
     return fn(this.value)
   }
 
+  and<U>(other: Option<U>): Option<U> {
+    return other
+  }
+
   andThen<U>(fn: (value: T) => Option<U>): Option<U> {
     return fn(this.value)
   }

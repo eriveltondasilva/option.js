@@ -27,6 +27,7 @@ describe('None', () => {
 
     it('should throw with custom message on expect', () => {
       const message = 'Custom error message'
+
       expect(() => None.expect(message)).toThrow(message)
       expect(() => None.expect(message)).toThrow(NoneUnwrapError)
     })
@@ -50,17 +51,30 @@ describe('None', () => {
 
     it('should return provided defaults on mapOr/mapOrElse', () => {
       expect(None.mapOr((v) => v, 'default')).toBe('default')
-      expect(None.mapOrElse(() => 'mapped', () => 'fallback')).toBe('fallback')
+      expect(
+        None.mapOrElse(
+          () => 'mapped',
+          () => 'fallback',
+        ),
+      ).toBe('fallback')
     })
   })
 
   describe('Chaining & Alternatives', () => {
+    it('should always return itself on and()', () => {
+      const other = new Some(42)
+
+      expect(None.and(other)).toBe(None)
+      expect(None.and(None)).toBe(None)
+    })
+
     it('should return itself on andThen', () => {
       expect(None.andThen(() => new Some(1))).toBe(None)
     })
 
     it('should return the alternative on or/orElse', () => {
       const other = new Some(42)
+
       expect(None.or(other)).toBe(other)
       expect(None.orElse(() => other)).toBe(other)
     })
@@ -68,10 +82,8 @@ describe('None', () => {
 
   describe('Inspection & Conversion', () => {
     it('should execute the none branch on match', () => {
-      const result = None.match({
-        some: () => 'got value',
-        none: () => 'empty',
-      })
+      const result = None.match({ some: () => 'got value', none: () => 'empty' })
+
       expect(result).toBe('empty')
     })
 

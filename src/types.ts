@@ -19,7 +19,7 @@ export interface OptionMethods<T> {
   flatten<U>(this: Option<Option<U>>): Option<U>
 
   // Alternativas
-  // and<U>(other: Option<U>): Option<U>
+  and<U>(other: Option<U>): Option<U>
   andThen<U>(fn: (value: T) => Option<U>): Option<U>
   or<U>(other: Option<U>): Option<T | U>
   orElse<U>(fn: () => Option<U>): Option<T | U>

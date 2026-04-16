@@ -49,6 +49,10 @@ class None implements INone {
     return defaultFn()
   }
 
+  and<U>(_other: Option<U>): Option<U> {
+    return this as unknown as Option<U>
+  }
+
   andThen<U>(_fn: (value: never) => Option<U>): Option<U> {
     return this
   }
