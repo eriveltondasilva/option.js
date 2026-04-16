@@ -18,64 +18,64 @@ npm install @eriveltonsilva/option.js
 
 # Using bun
 bun add @eriveltonsilva/option.js
-````
+```
 
 ## 🛠 Usage
 
 ### Basic Example
 
 ```typescript
-import { option as Option } from '@eriveltonsilva/option.js';
+import { option as Option } from '@eriveltonsilva/option.js'
 
 function getUsername(id: number) {
-  const users = { 1: "Erivelton" };
-  return Option.fromNullable(users[id]);
+  const users = { 1: 'Erivelton' }
+  return Option.fromNullable(users[id])
 }
 
 const user = getUsername(1)
-  .map(name => name.toUpperCase())
-  .unwrapOr("ANONYMOUS");
+  .map((name) => name.toUpperCase())
+  .unwrapOr('ANONYMOUS')
 
-console.log(user); // => "ERIVELTON"
+console.log(user) // => "ERIVELTON"
 ```
 
 ### Chaining with `and()` and `andThen()`
 
 ```typescript
-const some = Option.some(10);
-const other = Option.some(20);
+const some = Option.some(10)
+const other = Option.some(20)
 
 // Returns 'other' only if 'some' is Some
-const result = some.and(other);
+const result = some.and(other)
 
 // Chain operations that return Options
-const asyncStyle = some.andThen(val => Option.some(val * 2));
+const asyncStyle = some.andThen((val) => Option.some(val * 2))
 ```
 
 ### Pattern Matching
 
 ```typescript
-const maybeValue = Option.fromNullable(someData);
+const maybeValue = Option.fromNullable(someData)
 
 const message = maybeValue.match({
   some: (val) => `Found: ${val}`,
-  none: () => "Nothing here"
-});
+  none: () => 'Nothing here',
+})
 ```
 
 ## 📖 API Overview
 
 ### Factories
 
-  - `Option.some(value)`: Wraps a value.
-  - `Option.none`: The singleton instance for absent values.
-  - `Option.fromNullable(val)`: Safely converts `null` | `undefined` to `None`.
+- `Option.some(value)`: Wraps a value.
+- `Option.none`: The singleton instance for absent values.
+- `Option.fromNullable(val)`: Safely converts `null` | `undefined` to `None`.
 
 ### Guards
 
-  - `Option.isOption(val)`: Checks if a value is an instance of `Some` or `None`.
-  - `Option.isSome(val)`: Type guard for `Some`.
-  - `Option.isNone(val)`: Type guard for `None`.
+- `Option.isOption(val)`: Checks if a value is an instance of `Some` or `None`.
+- `Option.isSome(val)`: Type guard for `Some`.
+- `Option.isNone(val)`: Type guard for `None`.
 
 ### Key Instance Methods
 
@@ -98,18 +98,18 @@ MIT © [Erivelton Silva](https://www.google.com/search?q=https://github.com/eriv
 
 If you find this library useful, check out my other functional utilities:
 
-* **[@eriveltonsilva/result.js](https://github.com/eriveltonsilva/result.js)** - A type-safe way to handle errors and successes without `try/catch` overhead, inspired by Rust's `Result` type.
+- **[@eriveltonsilva/result.js](https://github.com/eriveltonsilva/result.js)** - A type-safe way to handle errors and successes without `try/catch` overhead, inspired by Rust's `Result` type.
 
 ```typescript
-import { Option } from '@eriveltonsilva/option.js';
-import { Result } from '@eriveltonsilva/result.js';
+import { Option } from '@eriveltonsilva/option.js'
+import { Result } from '@eriveltonsilva/result.js'
 
-const user = Option.fromNullable(null); // => None
+const user = Option.fromNullable(null) // => None
 
 // Converting an Option to a Result (conceptually)
 const userResult = user.match({
   some: (val) => Result.ok(val),
-  none: () => Result.err("User not found")
-});
+  none: () => Result.err('User not found'),
+})
 // => Err("User not found")
 ```
