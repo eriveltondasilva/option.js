@@ -18,11 +18,8 @@ import type {
  * @see isOption
  *
  * @example
- * Option.isSome(Option.some(42))
- * // => true
- *
- * Option.isSome(Option.none)
- * // => false
+ * Option.isSome(Option.some(42)) // => true
+ * Option.isSome(Option.none())   // => false
  */
 function isSome<T>(value: unknown): value is ISome<T> {
   return value != null && typeof value === 'object' && '_tag' in value && value._tag === 'Some'
@@ -36,11 +33,8 @@ function isSome<T>(value: unknown): value is ISome<T> {
  * @see isOption
  *
  * @example
- * Option.isNone(Option.none)
- * // => true
- *
- * Option.isNone(Option.some(42))
- * // => false
+ * Option.isNone(Option.none())   // => true
+ * Option.isNone(Option.some(42)) // => false
  */
 function isNone(value: unknown): value is INone {
   return value != null && typeof value === 'object' && '_tag' in value && value._tag === 'None'
@@ -55,16 +49,23 @@ function isNone(value: unknown): value is INone {
  * @see isNone
  *
  * @example
- * Option.isOption(Option.some(42))
- * // => true
- *
- * Option.isOption(Option.none)
- * // => true
+ * Option.isOption(Option.some(42)) // => true
+ * Option.isOption(Option.none())   // => true
  */
 function isOption<T>(value: unknown): value is IOption<T> {
   return isSome(value) || isNone(value)
 }
 
+/**
+ * Checks if all options are `None`.
+ *
+ * @group Type Guards
+ *
+ * @example
+ * Option.isEmpty([Option.some(42), Option.some(99)]) // => false
+ * Option.isEmpty([Option.some(42), Option.none()])   // => true
+ * Option.isEmpty([Option.none(), Option.none()])     // => true
+ */
 function isEmpty<T>(options: IOption<T>[]): boolean {
   return all(options).isNone()
 }
@@ -79,14 +80,23 @@ function isEmpty<T>(options: IOption<T>[]): boolean {
  * @group Creation
  *
  * @example
- * Option.some(42)
- * // => Some(42)
- *
- * Option.some('hello')
- * // => Some('hello')
+ * Option.some(42)      // => Some(42)
+ * Option.some('hello') // => Some('hello')
  */
-function some<T>(value: T): IOption<T> {
+function some<T>(value: T): ISome<T> {
   return new Some<T>(value)
+}
+
+/**
+ * Creates an empty Option.
+ *
+ * @group Creation
+ *
+ * @example
+ * Option.none() // => None
+ */
+function none(): INone {
+  return None
 }
 
 /**
@@ -95,11 +105,8 @@ function some<T>(value: T): IOption<T> {
  * @group Creation
  *
  * @example
- * Option.fromTry(() => 42)
- * // => Some(42)
- *
- * Option.fromTry(() => throw new Error('error'))
- * // => None
+ * Option.fromTry(() => 42)                       // => Some(42)
+ * Option.fromTry(() => throw new Error('error')) // => None
  */
 function fromTry<T>(fn: () => T): IOption<T> {
   try {
@@ -115,11 +122,8 @@ function fromTry<T>(fn: () => T): IOption<T> {
  * @group Creation
  *
  * @example
- * Option.fromPromise(async () => 42)
- * // => Some(42)
- *
- * Option.fromPromise(async () => throw new Error('error'))
- * // => None
+ * Option.fromPromise(async () => 42)                       // => Some(42)
+ * Option.fromPromise(async () => throw new Error('error')) // => None
  */
 async function fromPromise<T>(fn: () => Promise<T>): IAsyncOption<T> {
   try {
@@ -135,11 +139,8 @@ async function fromPromise<T>(fn: () => Promise<T>): IAsyncOption<T> {
  * @group Creation
  *
  * @example
- * Option.fromNullable(42)
- * // => Some(42)
- *
- * Option.fromNullable(null) || Option.fromNullable(undefined)
- * // => None
+ * Option.fromNullable(42)   // => Some(42)
+ * Option.fromNullable(null) // => None
  */
 function fromNullable<T>(value: T | null | undefined): IOption<NonNullable<T>> {
   return value == null ? None : new Some(value)
@@ -151,11 +152,8 @@ function fromNullable<T>(value: T | null | undefined): IOption<NonNullable<T>> {
  * @group Creation
  *
  * @example
- * Option.validate(42, (val) => val > 10)
- * // => Some(42)
- *
- * Option.validate(5, (val) => val > 10)
- * // => None
+ * Option.validate(42, (val) => val > 10) // => Some(42)
+ * Option.validate(5, (val) => val > 10)  // => None
  */
 function validate<T>(value: T, fn: (value: T) => boolean): IOption<T> {
   return fn(value) ? new Some(value) : None
@@ -173,14 +171,9 @@ function validate<T>(value: T, fn: (value: T) => boolean): IOption<T> {
  * @see values
  *
  * @example
- * Option.all([some(1), some(2), some(3)])
- * // => Some([1, 2, 3])
- *
- * Option.all([some(1), some(2), None])
- * // => None
- *
- * Option.all([])
- * // => Some([])
+ * Option.all([some(1), some(2), some(3)]) // => Some([1, 2, 3])
+ * Option.all([some(1), some(2), None])    // => None
+ * Option.all([])                          // => Some([])
  *
  * Option.all(['non-option'])
  * // => Error('all() called with non-Option value')
@@ -211,14 +204,9 @@ function all<T>(options: IOption<T>[]): IOption<T[]> {
  * @see values
  *
  * @example
- * Option.collect([some(1), some(2), some(3)])
- * // => [1, 2, 3]
- *
- * Option.collect([some(1), some(2), None])
- * // => [1, 2]
- *
- * Option.collect([])
- * // => []
+ * Option.collect([some(1), some(2), some(3)]) // => [1, 2, 3]
+ * Option.collect([some(1), some(2), None])    // => [1, 2]
+ * Option.collect([])                          // => []
  *
  * Option.collect(['non-option'])
  * // => Error('collect() called with non-Option value')
@@ -235,14 +223,9 @@ function collect<T>(options: IOption<T>[]): IOption<T[]> {
  * @see all
  *
  * @example
- * Option.values([some(1), some(2), some(3)])
- * // => [1, 2, 3]
- *
- * Option.values([some(1), some(2), None])
- * // => [1, 2]
- *
- * Option.values([])
- * // => []
+ * Option.values([some(1), some(2), some(3)]) // => [1, 2, 3]
+ * Option.values([some(1), some(2), None])    // => [1, 2]
+ * Option.values([])                          // => []
  *
  * Option.values(['non-option'])
  * // => Error('values() called with non-Option value')
@@ -269,8 +252,8 @@ export const option = {
   isOption,
   isEmpty,
   // # Creation
-  none: None,
   some,
+  none,
   fromTry,
   fromPromise,
   fromNullable,
