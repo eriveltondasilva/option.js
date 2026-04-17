@@ -1,11 +1,13 @@
 import { NoneUnwrapError } from './errors'
 
-import type { None as INone, Option, Some } from './types'
+import type { None as INone, Option as IOption, Some as ISome } from './types'
 
 class None implements INone {
   readonly _tag = 'None'
 
-  isSome(): this is Some<never> {
+  // #region Type Guards
+
+  isSome(): this is ISome<never> {
     return false
   }
 
@@ -20,6 +22,10 @@ class None implements INone {
   isNoneOr(_predicate: (value: never) => boolean): boolean {
     return true
   }
+
+  // #endregion
+
+  // #region Extraction
 
   unwrap(): never {
     throw new NoneUnwrapError()
@@ -37,7 +43,11 @@ class None implements INone {
     return fn()
   }
 
-  map<U>(_fn: (value: never) => U): Option<U> {
+  // #endregion
+
+  // #region Transformation
+
+  map<U>(_fn: (value: never) => U): this {
     return this
   }
 
@@ -49,41 +59,75 @@ class None implements INone {
     return defaultFn()
   }
 
-  and<U>(_other: Option<U>): Option<U> {
-    return this as unknown as Option<U>
-  }
-
-  andThen<U>(_fn: (value: never) => Option<U>): Option<U> {
+  filter(_predicate: (value: never) => boolean): this {
     return this
   }
 
-  filter(_predicate: (value: never) => boolean): Option<never> {
+  flatten(): this {
     return this
   }
 
-  or<U>(other: Option<U>): Option<U> {
+  // #endregion
+
+  // #region Alternation
+
+  and<U>(_other: IOption<U>): this {
+    return this
+  }
+
+  andThen<U>(_fn: (value: never) => IOption<U>): this {
+    return this
+  }
+
+  or<U>(other: IOption<U>): IOption<U> {
     return other
   }
 
-  orElse<U>(fn: () => Option<U>): Option<U> {
+  orElse<U>(fn: () => IOption<U>): IOption<U> {
     return fn()
   }
 
-  match<U>(patterns: { some: (value: never) => U; none: () => U }): U {
-    return patterns.none()
-  }
+  // #endregion
 
-  inspect(_fn: (value: never) => void): Option<never> {
+  // #region Combination
+
+  zip<U>(_other: IOption<U>): IOption<[never, U]> {
     return this
   }
 
-  flatten(): Option<never> {
+  zipWith<U, R>(_other: IOption<U>, _fn: (a: never, b: U) => R): IOption<R> {
     return this
   }
+
+  // #endregion
+
+  // #region Inspection
+
+  match<U>(handlers: { some: (value: never) => U; none: () => U }): U {
+    return handlers.none()
+  }
+
+  inspect(_fn: (value: never) => void): this {
+    return this
+  }
+
+  tap(_fn: (value: never) => void): this {
+    return this
+  }
+
+  // #endregion
+
+  // #region Conversion
 
   toNullable(): null {
     return null
   }
+
+  toUndefined(): undefined {
+    return undefined
+  }
+
+  // #endregion
 }
 
 // Singleton — None é imutável e não carrega estado
