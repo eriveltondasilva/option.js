@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest'
 
-import { NoneUnwrapError } from './errors'
-import { NoneClass as None } from './none'
-import { Some } from './some'
+import { NoneUnwrapError } from './errors.ts'
+import { NoneClass as None } from './none.ts'
+import { Some } from './some.ts'
 
 describe('None', () => {
   describe('Verification', () => {

@@ -1,6 +1,5 @@
-import { NoneClass as None } from './none'
-
-import type { None as INone, Option as IOption, Some as ISome } from './types'
+import { NoneClass as None } from './none.ts'
+import type { INone, IOption, ISome } from './types.ts'
 
 export class Some<T> implements ISome<T> {
   readonly _tag = 'Some'

@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 
-import { NoneClass as None } from './none'
-import { Some } from './some'
+import { NoneClass as None } from './none.ts'
+import { Some } from './some.ts'
 
 describe('Some', () => {
   describe('Verification', () => {

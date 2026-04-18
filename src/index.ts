@@ -1,10 +1,9 @@
-import { option } from './option'
+import { option } from './option.ts'
+import type { IOption } from './types.ts'
 
-import type { Option as OptionType } from './types'
+export { NoneClass as None } from './none.ts'
+export { Some } from './some.ts'
 
-export { NoneClass as None } from './none'
-export { Some } from './some'
-
-export type Option<T> = OptionType<T>
+export type Option<T> = IOption<T>
 export const Option = Object.freeze(option)
 export default Option

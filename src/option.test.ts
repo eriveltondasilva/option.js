@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest'
 
-import { option as Option } from './option'
+import { option as Option } from './option.ts'
 
 describe('Option', () => {
   describe('Factories', () => {
     it('Option.none should expose the correct instance of None', () => {
-      expect(Option.none.isNone()).toBe(true)
-      expect(Option.none.isSome()).toBe(false)
+      expect(Option.none().isNone()).toBe(true)
+      expect(Option.none().isSome()).toBe(false)
     })
 
     it('Option.some should create an instance of Some', () => {

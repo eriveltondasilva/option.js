@@ -1,6 +1,5 @@
-import { NoneUnwrapError } from './errors'
-
-import type { None as INone, Option as IOption, Some as ISome } from './types'
+import { NoneUnwrapError } from './errors.ts'
+import type { INone, IOption, ISome } from './types.ts'
 
 class None implements INone {
   readonly _tag = 'None'

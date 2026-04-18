@@ -1,8 +1,8 @@
-import { Option } from './index'
+import { Option } from '../dist/index.js'
 
 // Criação
 const a = Option.some(42)
-const b = Option.none
+const b = Option.none()
 
 // Verificação
 a.isSome() // => true
@@ -31,3 +31,6 @@ a.match({ some: (val) => `valor: ${String(val)}`, none: () => 'sem valor' })
 a.inspect((val) => {
   console.log(`valor: ${String(val)}`)
 })
+
+Option.all([]) // => Some([])
+Option.all([a, b]) // => None
