@@ -4,9 +4,11 @@ import pkg from './package.json'
 
 const { name, description, version, author, license, homepage } = pkg
 const year = new Date().getFullYear()
+// @ts-expect-error
 const minify = process.env.NODE_ENV === 'production'
 
-export const banner = `/**
+export const banner = `
+/**
  * ${name.toUpperCase()} - v${version}
  *
  * ${description || 'no description'}
@@ -20,8 +22,7 @@ export const banner = `/**
  * Inspired by:
  * @see https://doc.rust-lang.org/std/option - Rust Option Type
  * @see https://hexdocs.pm/gleam_stdlib/gleam/option.html - Gleam Option Type
- */
-`
+ */`
 
 export default defineConfig([
   {
@@ -31,7 +32,9 @@ export default defineConfig([
     treeshake: true,
     sourcemap: true,
     clean: true,
-    dts: true,
+    dts: {
+      banner,
+    },
     minify,
   },
 ])
