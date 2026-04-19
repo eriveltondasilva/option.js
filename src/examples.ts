@@ -1,6 +1,13 @@
-import { Option } from '../dist/index.js'
+/**
+ * Uso para testar as funcionalidades da biblioteca.
+ * Não é um teste formal, apenas um exemplo de uso.
+ */
 
-// Criação
+import { Option } from './index.js'
+
+// biome-ignore lint/suspicious/noConsole: arquivo de teste de implementação
+const log = (...message: unknown[]) => console.log(message)
+
 const a = Option.some(42)
 const b = Option.none()
 
@@ -28,9 +35,9 @@ b.orElse(() => Option.some(99)) // => Some(99)
 
 // Inspeção
 a.match({ some: (val) => `valor: ${String(val)}`, none: () => 'sem valor' })
-a.inspect((val) => {
-  console.log(`valor: ${String(val)}`)
-})
+a.inspect((_val) => {})
 
-Option.all([]) // => Some([])
-Option.all([a, b]) // => None
+log('value:', Option.values([])) // => []
+log('value:', Option.values([a, a])) // => [42, 42]
+log('all:', Option.all([]).unwrap()) // => Some([])
+log('all with options:', Option.all([a, a]).unwrap())
