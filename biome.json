@@ -16,7 +16,13 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true
+      "recommended": true,
+      "suspicious": {
+        "noConsole": {
+          "level": "on",
+          "options": { "allow": ["error", "warn"] }
+        }
+      }
     }
   },
   "javascript": {
@@ -34,15 +40,7 @@
         "organizeImports": {
           "level": "on",
           "options": {
-            "groups": [
-              [":BUN:", ":NODE:"],
-              ":PACKAGE:",
-              ":BLANK_LINE:",
-              ":ALIAS:",
-              ":BLANK_LINE:",
-              ":PATH:",
-              { "type": true }
-            ]
+            "groups": [[":BUN:", ":NODE:"], ":BLANK_LINE:", ":PACKAGE:", ":BLANK_LINE:", ":PATH:"]
           }
         }
       }
