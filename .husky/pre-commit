@@ -1,1 +1,1 @@
-# npm run typecheck && npm run fmt && npm run lint
+bun run types && bun run fmt:fix && bun run lint:fix

@@ -36,7 +36,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "bunx --bun tsup",
+    "build": "npm",
     "dev": "bun run ./src/examples.ts",
     "fix": "bun run types && bun run check:fix",
     "fmt": "bunx --bun @biomejs/biome format .",
@@ -45,6 +45,7 @@
     "lint:fix": "bunx --bun @biomejs/biome lint --write .",
     "check": "bunx --bun @biomejs/biome check .",
     "check:fix": "bunx --bun @biomejs/biome check --write .",
+    "check:ci": "bunx --bun @biomejs/biome ci .",
     "prepare": "husky",
     "prepublishOnly": "npm run build",
     "test": "vitest run",
