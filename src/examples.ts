@@ -1,43 +1,27 @@
+/** biome-ignore-all lint/suspicious/noConsole: arquivo de testes */
+
 /**
  * Uso para testar as funcionalidades da biblioteca.
  * Não é um teste formal, apenas um exemplo de uso.
  */
+//
+import { none, Option, some } from './index.js'
 
-import { Option } from './index.js'
+// import { none, Option, some } from '../dist/index.js'
 
-// biome-ignore lint/suspicious/noConsole: arquivo de teste de implementação
 const log = (...message: unknown[]) => console.log(message)
 
-const a = Option.some(42)
-const b = Option.none()
+const a = Option.some(42).unwrap()
+const b = Option.none().unwrapOr(0)
+const c = some(123).unwrap()
+const d = none().unwrapOr(0)
 
-// Verificação
-a.isSome() // => true
-a.isNone() // => false
-a.isSomeAnd((val) => val > 10)
-// => true
-
-// Extração segura
-a.unwrap() // => 42 (lança erro se None)
-a.expect('valor obrigatório') // => 42 (lança erro com mensagem customizada)
-a.unwrapOr(0) // => 42
-a.unwrapOrElse(() => 0) // => 42
-
-// Transformação
-a.map((val) => val * 2) // => Some(84)
-a.mapOr((val) => val * 2, 0) // => 84
-a.andThen((val) => Option.some(val + 1)) // => Some(43)
-a.filter((val) => val > 100) // => None
-
-// Alternativas
-b.or(Option.some(99)) // => Some(99)
-b.orElse(() => Option.some(99)) // => Some(99)
-
-// Inspeção
-a.match({ some: (val) => `valor: ${String(val)}`, none: () => 'sem valor' })
-a.inspect((_val) => {})
+log('a:', a)
+log('b:', b)
+log('c:', c)
+log('d:', d)
 
 log('value:', Option.values([])) // => []
-log('value:', Option.values([a, a])) // => [42, 42]
+log('value:', Option.values([some(42), some(42)])) // => [42, 42]
 log('all:', Option.all([]).unwrap()) // => Some([])
-log('all with options:', Option.all([a, a]).unwrap())
+log('all with options:', Option.all([some(42), some(42)]).unwrap())

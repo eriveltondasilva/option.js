@@ -124,7 +124,8 @@ export interface OptionMethods<T> {
   // #region Transformation
 
   /**
-   * Maps an `Option<T>` to `Option<U>` by applying a function to a contained `Some` value, leaving a `None` value untouched.
+   * Maps an `Option<T>` to `Option<U>` by applying a function
+   * to a contained `Some` value, leaving a `None` value untouched.
    *
    * @group Transformation
    *
@@ -139,7 +140,8 @@ export interface OptionMethods<T> {
   map<U>(fn: (value: T) => U): IOption<U>
 
   /**
-   * Returns the provided default result (if `None`), or applies a function to the contained value (if `Some`).
+   * Returns the provided default result (if `None`),
+   * or applies a function to the contained value (if `Some`).
    *
    * @group Transformation
    *
@@ -155,7 +157,8 @@ export interface OptionMethods<T> {
   mapOr<U>(fn: (value: T) => U, defaultValue: U): U
 
   /**
-   * Computes a default function result (if `None`), or applies a different function to the contained value (if `Some`).
+   * Computes a default function result (if `None`),
+   * or applies a different function to the contained value (if `Some`).
    *
    * @group Transformation
    *
