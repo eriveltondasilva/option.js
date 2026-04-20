@@ -1,4 +1,4 @@
-# @eriveltonsilva/option.js
+# @eriveltondasilva/option.js
 
 A lightweight, type-safe library inspired by Rust's `Option` enum for handling optional values in JavaScript and TypeScript without `null` or `undefined` pitfalls.
 
@@ -14,20 +14,17 @@ A lightweight, type-safe library inspired by Rust's `Option` enum for handling o
 
 ```bash
 # Using npm
-npm install @eriveltonsilva/option.js
-
-# Using bun
-bun add @eriveltonsilva/option.js
-```
+npm install @eriveltondasilva/option.js
 
 ## 🛠 Usage
 
 ### Basic Example
 
 ```typescript
-import { option as Option } from '@eriveltonsilva/option.js'
+import { Option } from '@eriveltondasilva/option.js'
+// import Option from '@eriveltondasilva/option.js'
 
-function getUsername(id: number) {
+function getUsername(id: number): Option<string> {
   const users = { 1: 'Erivelton' }
   return Option.fromNullable(users[id])
 }
@@ -49,7 +46,7 @@ const other = Option.some(20)
 const result = some.and(other)
 
 // Chain operations that return Options
-const asyncStyle = some.andThen((val) => Option.some(val * 2))
+const result = some.andThen((val) => Option.some(val * 2))
 ```
 
 ### Pattern Matching
@@ -67,8 +64,8 @@ const message = maybeValue.match({
 
 ### Factories
 
-- `Option.some(value)`: Wraps a value.
-- `Option.none`: The singleton instance for absent values.
+- `Option.some(val)`: Wraps a value.
+- `Option.none()`: The singleton instance for absent values.
 - `Option.fromNullable(val)`: Safely converts `null` | `undefined` to `None`.
 
 ### Guards
@@ -85,24 +82,22 @@ const message = maybeValue.match({
 | `.and(other)`      | Returns `other` if instance is `Some`, else `None`. |
 | `.andThen(fn)`     | Returns the Option resulting from `fn` if `Some`.   |
 | `.unwrapOr(alt)`   | Returns value or the provided fallback.             |
-| `.match(patterns)` | Executes a branch based on the state.               |
+| `.match(handlers)` | Executes a branch based on the state.               |
 | `.inspect(fn)`     | Runs a side-effect without changing the Option.     |
 
 ## 📄 License
 
-MIT © [Erivelton Silva](https://www.google.com/search?q=https://github.com/eriveltonsilva)
-
----
+MIT © [Erivelton Silva](https://github.com/eriveltondasilva)
 
 ## 🔗 Related Projects
 
 If you find this library useful, check out my other functional utilities:
 
-- **[@eriveltonsilva/result.js](https://github.com/eriveltonsilva/result.js)** - A type-safe way to handle errors and successes without `try/catch` overhead, inspired by Rust's `Result` type.
+- **[@eriveltondasilva/result.js](https://github.com/eriveltondasilva/result.js)** - A type-safe way to handle errors and successes without `try/catch` overhead, inspired by Rust's `Result` type.
 
 ```typescript
-import { Option } from '@eriveltonsilva/option.js'
-import { Result } from '@eriveltonsilva/result.js'
+import { Option } from '@eriveltondasilva/option.js'
+import { Result } from '@eriveltondasilva/result.js'
 
 const user = Option.fromNullable(null) // => None
 
