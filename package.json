@@ -44,7 +44,7 @@
     "lint": "bunx --bun @biomejs/biome lint .",
     "lint:fix": "bunx --bun @biomejs/biome lint --write .",
     "check": "bunx --bun @biomejs/biome check .",
-    "check:fix": "bunx --bun @biomejs/biome check --write --unsafe .",
+    "check:fix": "bunx --bun @biomejs/biome check --write .",
     "prepare": "husky",
     "prepublishOnly": "npm run build",
     "test": "vitest run",
