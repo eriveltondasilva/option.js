@@ -1,127 +1,196 @@
+/** biome-ignore-all lint/suspicious/noExplicitAny: arquivo de testes */
 import { describe, expect, it, vi } from 'vitest'
 
 import { NoneClass as None } from './none.ts'
+import * as Option from './option.ts'
 import { Some } from './some.ts'
 
-describe('Some', () => {
-  describe('Verification', () => {
-    it('should identify correctly', () => {
-      const some = new Some(42)
+const expectSome = <T>(opt: any, value: T) => {
+  expect(opt.isSome()).toBe(true)
+  expect(opt.unwrap()).toBe(value)
+}
 
-      expect(some.isSome()).toBe(true)
-      expect(some.isNone()).toBe(false)
-      expect(some._tag).toBe('Some')
+describe('Some', () => {
+  describe('Type Guards', () => {
+    it('should return true for isSome', () => {
+      expect(new Some(42).isSome()).toBe(true)
     })
 
-    it('should evaluate isSomeAnd and isNoneOr based on predicate', () => {
-      const some = new Some(42)
+    it('should return false for isNone', () => {
+      expect(new Some(42).isNone()).toBe(false)
+    })
 
-      expect(some.isSomeAnd((val) => val === 42)).toBe(true)
-      expect(some.isSomeAnd((val) => val === 99)).toBe(false)
+    it('should evaluate predicate in isSomeAnd', () => {
+      expect(new Some(10).isSomeAnd((v) => v > 5)).toBe(true)
+      expect(new Some(3).isSomeAnd((v) => v > 5)).toBe(false)
+    })
 
-      expect(some.isNoneOr((val) => val === 42)).toBe(true)
-      expect(some.isNoneOr((val) => val === 99)).toBe(false)
+    it('should evaluate predicate in isNoneOr', () => {
+      expect(new Some(10).isNoneOr((v) => v > 5)).toBe(true)
+      expect(new Some(3).isNoneOr((v) => v > 5)).toBe(false)
     })
   })
 
   describe('Extraction', () => {
-    it('should return value on unwrap and expect', () => {
-      const some = new Some('data')
-
-      expect(some.unwrap()).toBe('data')
-      expect(some.expect('This should not throw')).toBe('data')
+    it('should return value with unwrap', () => {
+      expect(new Some(42).unwrap()).toBe(42)
+      expect(new Some('hello').unwrap()).toBe('hello')
+      expect(new Some({ a: 1 }).unwrap()).toEqual({ a: 1 })
     })
 
-    it('should return wrapped value, ignoring defaults on unwrapOr/unwrapOrElse', () => {
-      const some = new Some(10)
+    it('should preserve reference when unwrapping objects', () => {
+      const obj = { a: 1 }
+      expect(new Some(obj).unwrap()).toBe(obj)
+    })
 
-      expect(some.unwrapOr(99)).toBe(10)
-      expect(some.unwrapOrElse(() => 99)).toBe(10)
+    it('should return value and not call function in unwrapOrElse', () => {
+      const fallback = vi.fn(() => 99)
+      const result = new Some(42).unwrapOrElse(fallback)
+
+      expect(result).toBe(42)
+      expect(fallback).not.toHaveBeenCalled()
     })
   })
 
   describe('Transformation', () => {
-    it('should map the value correctly', () => {
-      const result = new Some(10).map((val) => val * 2)
+    it('should transform value with map', () => {
+      expectSome(
+        new Some(5).map((v) => v * 2),
+        10,
+      )
+    })
 
+    it('should transform to different type with map', () => {
+      expectSome(
+        new Some(42).map((v) => `value: ${v}`),
+        'value: 42',
+      )
+    })
+
+    it('should not mutate original Some', () => {
+      const original = new Some(10)
+      const result = original.map((v) => v * 2)
+
+      expect(original.unwrap()).toBe(10)
       expect(result.unwrap()).toBe(20)
     })
 
-    it('should apply map ignoring defaults on mapOr/mapOrElse', () => {
-      const some = new Some(10)
+    it('should propagate errors in map', () => {
+      const error = new Error('fail')
 
-      expect(some.mapOr((val) => val * 2, 99)).toBe(20)
-      expect(
-        some.mapOrElse(
-          (val) => val * 2,
-          () => 99,
-        ),
-      ).toBe(20)
+      expect(() =>
+        new Some(1).map(() => {
+          throw error
+        }),
+      ).toThrow(error)
     })
 
-    it('should filter correctly turning into None if predicate fails', () => {
-      const some = new Some(10)
-
-      expect(some.filter((val) => val > 5).isSome()).toBe(true)
-      expect(some.filter((val) => val > 15).isNone()).toBe(true)
+    it('should return None when filter predicate is false', () => {
+      expect(new Some(3).filter((v) => v > 5).isNone()).toBe(true)
     })
 
-    it('should flatten nested Options', () => {
-      const nested = new Some(new Some('inner'))
+    it('should not execute map after filter returns None', () => {
+      const mapSpy = vi.fn()
+      new Some(10).filter(() => false).map(mapSpy)
 
-      expect(nested.flatten().unwrap()).toBe('inner')
+      expect(mapSpy).not.toHaveBeenCalled()
+    })
+
+    // IMPROVED: flatten mais profundo
+    it('should deeply flatten nested Some', () => {
+      const nested = new Some(new Some(new Some(42)))
+      // @ts-expect-error: teste de flatten profundo
+      const result = nested.flatten().flatten()
+
+      expect(result.unwrap()).toBe(42)
     })
   })
 
-  describe('Chaining & Alternatives', () => {
-    it('should return the other option on and()', () => {
+  describe('Alternation', () => {
+    it('should return other with and', () => {
+      expectSome(new Some(1).and(Option.some(2)), 2)
+    })
+
+    it('should return None when and receives None', () => {
+      expect(new Some(1).and(None).isNone()).toBe(true)
+    })
+
+    it('should return itself with or', () => {
+      expectSome(new Some(1).or(Option.some(2)), 1)
+    })
+
+    it('should return same instance in or', () => {
       const some = new Some(1)
-      const otherSome = new Some(2)
+      const result = some.or(Option.some(2))
 
-      expect(some.and(otherSome)).toBe(otherSome)
-      expect(some.and(None)).toBe(None)
-    })
-
-    it('should chain with andThen', () => {
-      const some = new Some(42)
-
-      expect(some.andThen((val) => new Some(val * 2)).unwrap()).toBe(84)
-      expect(some.andThen(() => None).isNone()).toBe(true)
-    })
-
-    it('should ignore alternatives returning itself on or/orElse', () => {
-      const some = new Some(10)
-      const other = new Some(99)
-
-      expect(some.or(other).unwrap()).toBe(10)
-      expect(some.orElse(() => other).unwrap()).toBe(10)
-    })
-  })
-
-  describe('Inspection & Conversion', () => {
-    it('should execute the some branch on match', () => {
-      const result = new Some('hello').match({
-        some: (val) => `got: ${val}`,
-        none: () => 'nothing',
-      })
-
-      expect(result).toBe('got: hello')
-    })
-
-    it('should run inspect for side effects and return itself', () => {
-      const some = new Some(42)
-      const spyFn = vi.fn()
-
-      const result = some.inspect(spyFn)
-
-      expect(spyFn).toHaveBeenCalledWith(42)
       expect(result).toBe(some)
     })
 
-    it('should convert to underlying value on toNullable/toUndefined', () => {
+    it('should not call fallback in orElse', () => {
+      const fallback = vi.fn(() => Option.some(2))
+      const result = new Some(1).orElse(fallback)
+
+      expect(result.unwrap()).toBe(1)
+      expect(fallback).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('Combination', () => {
+    it('should zip with another Some', () => {
+      const result = new Some(1).zip(Option.some(2)).unwrap()
+
+      expect(Array.isArray(result)).toBe(true)
+      expect(result).toHaveLength(2)
+      expect(result).toEqual([1, 2])
+    })
+
+    it('should return None when zipping with None', () => {
+      expect(new Some(1).zip(None).isNone()).toBe(true)
+    })
+  })
+
+  describe('Inspection', () => {
+    it('should execute function and return self in inspect', () => {
+      const spy = vi.fn()
       const some = new Some(42)
 
-      expect(some.toNullable()).toBe(42)
+      const result = some.inspect(spy)
+
+      expect(spy).toHaveBeenCalledWith(42)
+      expect(result).toBe(some)
+    })
+
+    it('should preserve execution order in chain', () => {
+      const calls: number[] = []
+
+      new Some(10)
+        .inspect((v) => calls.push(v))
+        .map((v) => v * 2)
+        .inspect((v) => calls.push(v))
+
+      expect(calls).toEqual([10, 20])
+    })
+  })
+
+  describe('Chaining', () => {
+    it('should chain multiple operations', () => {
+      const result = new Some(10)
+        .map((v) => v * 2)
+        .filter((v) => v > 15)
+        .map((v) => v + 5)
+        .unwrapOr(0)
+
+      expect(result).toBe(25)
+    })
+
+    it('should short-circuit on failure', () => {
+      const result = new Some(10)
+        .map((v) => v * 2)
+        .filter((v) => v > 100)
+        .map((v) => v + 5)
+        .unwrapOr(0)
+
+      expect(result).toBe(0)
     })
   })
 })

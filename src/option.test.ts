@@ -198,14 +198,14 @@ describe('Collection', () => {
     it('should throw error for non-Option values', () => {
       const opts = [Option.some(1), 'not-option' as any, Option.some(3)]
       expect(() => Option.all(opts)).toThrow(
-        'Option.all()|collect() called with non-Option value at index 1: string',
+        'Option.all() called with non-Option value at index 1: string',
       )
     })
 
     it('should throw error with correct index', () => {
       const opts = [Option.some(1), Option.some(2), null as any]
       expect(() => Option.all(opts)).toThrow(
-        'Option.all()|collect() called with non-Option value at index 2: object',
+        'Option.all() called with non-Option value at index 2: object',
       )
     })
 
@@ -231,6 +231,13 @@ describe('Collection', () => {
     it('should return None if any option is None', () => {
       const opts = [Option.some(1), Option.none(), Option.some(3)]
       expect(Option.collect(opts).isNone()).toBe(true)
+    })
+
+    it('should throw error for non-Option values', () => {
+      const opts = [Option.some(1), 'not-option' as any, Option.some(3)]
+      expect(() => Option.collect(opts)).toThrow(
+        'Option.collect() called with non-Option value at index 1: string',
+      )
     })
   })
 
