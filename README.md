@@ -1,10 +1,10 @@
 # Option.js
 
-[![npm version](https://img.shields.io/npm/v/@eriveltonsilva/option.js)](https://www.npmjs.com/package/@eriveltonsilva/option.js)
-[![npm size](https://img.shields.io/npm/unpacked-size/@eriveltonsilva/option.js)](https://www.npmjs.com/package/@eriveltonsilva/option.js)
+[![npm version](https://img.shields.io/npm/v/@eriveltondasilva/option.js)](https://www.npmjs.com/package/@eriveltondasilva/option.js)
+[![npm size](https://img.shields.io/npm/unpacked-size/@eriveltondasilva/option.js)](https://www.npmjs.com/package/@eriveltondasilva/option.js)
 [![CI](https://github.com/eriveltondasilva/option.js/workflows/CI/badge.svg)](https://github.com/eriveltondasilva/option.js/actions)
 [![Checked with Biome](https://img.shields.io/badge/Checked_with-Biome-60a5fa?logo=biome)](https://biomejs.dev)
-[![Zero Dependencies](https://img.shields.io/badge/dependencies-0-blue)](https://www.npmjs.com/package/@eriveltonsilva/option.js)
+[![Zero Dependencies](https://img.shields.io/badge/dependencies-0-blue)](https://www.npmjs.com/package/@eriveltondasilva/option.js)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 A lightweight, type-safe library inspired by Rust's `Option` enum for handling optional values in JavaScript and TypeScript without `null` or `undefined` pitfalls.
@@ -20,7 +20,11 @@ A lightweight, type-safe library inspired by Rust's `Option` enum for handling o
 ## Installation
 
 ```bash
-npm install @eriveltonsilva/option.js
+npm install @eriveltondasilva/option.js
+```
+
+```bash
+bun add @eriveltondasilva/option.js
 ```
 
 ## Usage
@@ -28,8 +32,8 @@ npm install @eriveltonsilva/option.js
 ### Basic Example
 
 ```typescript
-import { Option } from '@eriveltonsilva/option.js'
-// import Option from '@eriveltonsilva/option.js'
+import { Option } from '@eriveltondasilva/option.js'
+// import Option from '@eriveltondasilva/option.js'
 
 function getUsername(id: number): Option<string> {
   const users = { 1: 'Erivelton' }
@@ -100,11 +104,11 @@ MIT © [Erivelton Silva](https://github.com/eriveltondasilva)
 
 If you find this library useful, check out my other functional utilities:
 
-**[@eriveltonsilva/result.js](https://www.npmjs.com/package/@eriveltonsilva/result.js)** — A type-safe way to handle errors and successes without `try/catch` overhead, inspired by Rust's `Result` type.
+**[@eriveltonsilva/result.js](https://www.npmjs.com/package/@eriveltondasilva/result.js)** — A type-safe way to handle errors and successes without `try/catch` overhead, inspired by Rust's `Result` type.
 
 ```typescript
-import { Option } from '@eriveltonsilva/option.js'
-import { Result } from '@eriveltonsilva/result.js'
+import { Option } from '@eriveltondasilva/option.js'
+import { Result } from '@eriveltondasilva/result.js'
 
 const user = Option.fromNullable(null) // => None
 
