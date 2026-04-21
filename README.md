@@ -23,7 +23,7 @@ A lightweight, type-safe library inspired by Rust's `Option` enum for handling o
 npm install @eriveltonsilva/option.js
 ```
 
-## 🛠 Usage
+## Usage
 
 ### Basic Example
 
@@ -59,9 +59,9 @@ const result = some.andThen((val) => Option.some(val * 2))
 ### Pattern Matching
 
 ```typescript
-const maybeValue = Option.fromNullable(someData)
+const result = Option.fromNullable(someData)
 
-const message = maybeValue.match({
+const message = result.match({
   some: (val) => `Found: ${val}`,
   none: () => 'Nothing here',
 })
@@ -100,7 +100,7 @@ MIT © [Erivelton Silva](https://github.com/eriveltondasilva)
 
 If you find this library useful, check out my other functional utilities:
 
-- **[@eriveltondasilva/result.js](https://github.com/eriveltondasilva/result.js)** - A type-safe way to handle errors and successes without `try/catch` overhead, inspired by Rust's `Result` type.
+**[@eriveltonsilva/result.js](https://www.npmjs.com/package/@eriveltonsilva/result.js)** — A type-safe way to handle errors and successes without `try/catch` overhead, inspired by Rust's `Result` type.
 
 ```typescript
 import { Option } from '@eriveltonsilva/option.js'
