@@ -1,35 +1,35 @@
-# @eriveltondasilva/option.js
+# Option.js
 
-[![NPM Version](https://img.shields.io/npm/v/@eriveltonsilva/option.js)](https://www.npmjs.com/package/@eriveltonsilva/option.js)
+[![npm version](https://img.shields.io/npm/v/@eriveltonsilva/option.js)](https://www.npmjs.com/package/@eriveltonsilva/option.js)
+[![npm size](https://img.shields.io/npm/unpacked-size/@eriveltonsilva/option.js)](https://www.npmjs.com/package/@eriveltonsilva/option.js)
 [![CI](https://github.com/eriveltondasilva/option.js/workflows/CI/badge.svg)](https://github.com/eriveltondasilva/option.js/actions)
-[![Checked with Biome](https://img.shields.io/badge/Checked_with-Biome-60a5fa?style=flat&logo=biome)](https://biomejs.dev)
-[![Zero Dependencies](https://img.shields.io/badge/dependencies-0-blue)](https://www.npmjs.com/package/@eriveltonsilva/result.js)
-![Size](https://img.shields.io/bundlephobia/minzip/@eriveltonsilva/option.js)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Checked with Biome](https://img.shields.io/badge/Checked_with-Biome-60a5fa?logo=biome)](https://biomejs.dev)
+[![Zero Dependencies](https://img.shields.io/badge/dependencies-0-blue)](https://www.npmjs.com/package/@eriveltonsilva/option.js)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 A lightweight, type-safe library inspired by Rust's `Option` enum for handling optional values in JavaScript and TypeScript without `null` or `undefined` pitfalls.
 
 ## Features
 
-- **Type Safety**: Prevents "cannot read property of null" errors by forcing explicit handling of absent values.
-- **Functional API**: Chainable methods like `map`, `andThen`, `filter`, `and`, and more.
-- **Singleton None**: Memory-efficient `None` implementation using a singleton pattern.
-- **Modern Stack**: Built with TypeScript, optimized with `tsup`, and tested with `vitest`.
-- **Zero Dependencies**: Extremely lightweight.
+- **Type-safe by design**: Eliminates unsafe `null`/`undefined` access by enforcing explicit handling.
+- **Composable API**: Chainable methods like `map`, `andThen`, `filter`, `unwrapOr`, and more.
+- **Singleton `None`**: Single shared instance for better memory usage.
+- **TypeScript-first**: Fully typed with excellent inference.
+- **Tiny footprint**: Zero dependencies and minimal bundle size.
 
 ## Installation
 
 ```bash
-# Using npm
-npm install @eriveltondasilva/option.js
+npm install @eriveltonsilva/option.js
+```
 
 ## 🛠 Usage
 
 ### Basic Example
 
 ```typescript
-import { Option } from '@eriveltondasilva/option.js'
-// import Option from '@eriveltondasilva/option.js'
+import { Option } from '@eriveltonsilva/option.js'
+// import Option from '@eriveltonsilva/option.js'
 
 function getUsername(id: number): Option<string> {
   const users = { 1: 'Erivelton' }
@@ -103,8 +103,8 @@ If you find this library useful, check out my other functional utilities:
 - **[@eriveltondasilva/result.js](https://github.com/eriveltondasilva/result.js)** - A type-safe way to handle errors and successes without `try/catch` overhead, inspired by Rust's `Result` type.
 
 ```typescript
-import { Option } from '@eriveltondasilva/option.js'
-import { Result } from '@eriveltondasilva/result.js'
+import { Option } from '@eriveltonsilva/option.js'
+import { Result } from '@eriveltonsilva/result.js'
 
 const user = Option.fromNullable(null) // => None
 
