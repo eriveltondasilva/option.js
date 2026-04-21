@@ -129,5 +129,5 @@ class None implements INone {
   // #endregion
 }
 
-// Singleton — None é imutável e não carrega estado
+// # Singleton — None é imutável e não carrega estado
 export const NoneClass = new None()

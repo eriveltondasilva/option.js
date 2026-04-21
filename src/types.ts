@@ -69,7 +69,8 @@ export interface OptionMethods<T> {
    *
    * @example
    * Option.some(42).unwrap() // => 42
-   * Option.none().unwrap()   // => throws NoneUnwrapError
+   * Option.none().unwrap()
+   * // => throws NoneUnwrapError('...')
    */
   unwrap(): T
 
