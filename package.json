@@ -49,7 +49,7 @@
     "check": "bunx --bun @biomejs/biome check .",
     "check:fix": "bunx --bun @biomejs/biome check --write .",
     "check:ci": "bunx --bun @biomejs/biome ci .",
-    "prepare": "husky",
+    "husky:init": "bunx husky install",
     "test": "vitest run",
     "test:watch": "vitest",
     "types": "tsc --noEmit"
