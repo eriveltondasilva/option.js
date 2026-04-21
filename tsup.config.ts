@@ -4,8 +4,8 @@ import pkg from './package.json'
 
 const { name, description, version, author, license, homepage } = pkg
 const year = new Date().getFullYear()
-// @ts-expect-error
-const minify = process.env.NODE_ENV === 'production'
+
+const isProduction = process.env.NODE_ENV === 'production'
 
 export const banner = `
 /**
@@ -30,11 +30,11 @@ export default defineConfig([
     banner: { js: banner },
     format: ['esm'],
     treeshake: true,
-    sourcemap: true,
+    sourcemap: !isProduction,
     clean: true,
     dts: {
       banner,
     },
-    minify,
+    minify: isProduction,
   },
 ])

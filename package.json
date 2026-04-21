@@ -38,7 +38,6 @@
   "scripts": {
     "build": "bun run clean && tsup",
     "clean": "rimraf dist",
-    "prepublishOnly": "bun run build",
     "preversion": "bun run types && bun run check:ci && bun run test",
     "postversion": "git push && git push --tags",
     "fix": "bun run types && bun run check:fix",
