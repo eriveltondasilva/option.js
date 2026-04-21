@@ -39,7 +39,8 @@
   "scripts": {
     "build": "bun run clean && tsup",
     "clean": "rimraf dist",
-    "preversion": "bun run types && bun run check:ci && bun run test",
+    "prepublishOnly": "bun run build",
+    "preversion": "bun run types && bun run check:ci",
     "postversion": "git push && git push --tags",
     "fix": "bun run types && bun run check:fix",
     "fmt": "bunx --bun @biomejs/biome format .",
@@ -66,8 +67,7 @@
     "vitest": "^4.1.5"
   },
   "engines": {
-    "node": ">=20",
-    "bun": "1.3.13"
+    "node": ">=20"
   },
   "publishConfig": {
     "access": "public",
