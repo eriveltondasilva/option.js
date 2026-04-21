@@ -1,14 +1,15 @@
 # @eriveltondasilva/option.js
 
-[![NPM Version](https://img.shields.io/npm/v/@eriveltondasilva/option.js)](https://www.npmjs.com/package/@eriveltondasilva/option.js)
-[![CI](https://github.com/eriveltonsilva/option.js/workflows/CI/badge.svg)](https://github.com/eriveltondasilva/option.js/actions)
+[![NPM Version](https://img.shields.io/npm/v/@eriveltonsilva/option.js)](https://www.npmjs.com/package/@eriveltonsilva/option.js)
+[![CI](https://github.com/eriveltondasilva/option.js/workflows/CI/badge.svg)](https://github.com/eriveltondasilva/option.js/actions)
 [![Checked with Biome](https://img.shields.io/badge/Checked_with-Biome-60a5fa?style=flat&logo=biome)](https://biomejs.dev)
-[![license](https://img.shields.io/npm/l/@eriveltondasilva/option.js)](https://github.com/eriveltondasilva/option.js/blob/main/LICENSE)
-
+[![Zero Dependencies](https://img.shields.io/badge/dependencies-0-blue)](https://www.npmjs.com/package/@eriveltonsilva/result.js)
+![Size](https://img.shields.io/bundlephobia/minzip/@eriveltonsilva/option.js)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 A lightweight, type-safe library inspired by Rust's `Option` enum for handling optional values in JavaScript and TypeScript without `null` or `undefined` pitfalls.
 
-## 🚀 Features
+## Features
 
 - **Type Safety**: Prevents "cannot read property of null" errors by forcing explicit handling of absent values.
 - **Functional API**: Chainable methods like `map`, `andThen`, `filter`, `and`, and more.
@@ -16,7 +17,7 @@ A lightweight, type-safe library inspired by Rust's `Option` enum for handling o
 - **Modern Stack**: Built with TypeScript, optimized with `tsup`, and tested with `vitest`.
 - **Zero Dependencies**: Extremely lightweight.
 
-## 📦 Installation
+## Installation
 
 ```bash
 # Using npm
@@ -66,7 +67,7 @@ const message = maybeValue.match({
 })
 ```
 
-## 📖 API Overview
+## API Overview
 
 ### Factories
 
@@ -91,11 +92,11 @@ const message = maybeValue.match({
 | `.match(handlers)` | Executes a branch based on the state.               |
 | `.inspect(fn)`     | Runs a side-effect without changing the Option.     |
 
-## 📄 License
+## License
 
 MIT © [Erivelton Silva](https://github.com/eriveltondasilva)
 
-## 🔗 Related Projects
+## Related Projects
 
 If you find this library useful, check out my other functional utilities:
 
