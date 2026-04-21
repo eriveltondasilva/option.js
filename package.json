@@ -9,10 +9,10 @@
     "rust-like",
     "rusty"
   ],
-  "homepage": "https://github.com/eriveltonsilva/option.js",
+  "homepage": "https://github.com/eriveltondasilva/option.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/eriveltonsilva/option.js.git"
+    "url": "git+https://github.com/eriveltondasilva/option.js.git"
   },
   "license": "MIT",
   "author": {
