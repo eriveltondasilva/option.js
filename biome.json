@@ -18,10 +18,7 @@
     "rules": {
       "recommended": true,
       "suspicious": {
-        "noConsole": {
-          "level": "on",
-          "options": { "allow": ["error", "warn"] }
-        }
+        "noConsole": { "level": "on", "options": { "allow": ["error", "warn"] } }
       }
     }
   },

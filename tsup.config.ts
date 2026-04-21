@@ -9,12 +9,12 @@ const isProduction = process.env.NODE_ENV === 'production'
 
 export const banner = `
 /**
- * ${name.toUpperCase()} - v${version}
+ * ${name?.toUpperCase()} - v${version}
  *
  * ${description || 'no description'}
  *
  * @author ${author.name} <${author.email}>
- * @license ${license.toUpperCase()}
+ * @license ${license?.toUpperCase()}
  * @copyright ${year} ${author.name}
  *
  * @see ${homepage} - Documentation
@@ -28,13 +28,11 @@ export default defineConfig([
   {
     entry: ['./src/index.ts'],
     banner: { js: banner },
+    dts: { banner },
     format: ['esm'],
     treeshake: true,
-    sourcemap: !isProduction,
     clean: true,
-    dts: {
-      banner,
-    },
+    sourcemap: !isProduction,
     minify: isProduction,
   },
 ])

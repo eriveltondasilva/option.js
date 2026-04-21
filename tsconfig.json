@@ -12,6 +12,7 @@
     // Module resolution
     "rootDir": "./src",
     "outDir": "./dist",
+
     "paths": {
       "@/*": ["./src/*"]
     }
