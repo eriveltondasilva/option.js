@@ -42,9 +42,9 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 24
           registry-url: "https://registry.npmjs.org"
-        # O bun não tem suporte oficial a provenance
+        # O bun não tem suporte oficial a provenance, então usar o npm para publicar
 
       - name: Install dependencies
         run: bun ci
@@ -58,8 +58,8 @@ jobs:
         run: bunx publint
 
       - name: Publish to NPM
-        run: npm publish --provenance --access public
+        run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        # O bun não tem suporte oficial a provenance, então usamos o npm para publicar
+        # O bun não tem suporte oficial a provenance, então usar o npm para publicar
         # Quando provenance estiver disponível, migrar para bun publish
