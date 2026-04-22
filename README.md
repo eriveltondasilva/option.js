@@ -4,7 +4,7 @@
 [![npm size](https://img.shields.io/npm/unpacked-size/@eriveltondasilva/option.js)](https://www.npmjs.com/package/@eriveltondasilva/option.js)
 [![CI](https://github.com/eriveltondasilva/option.js/workflows/CI/badge.svg)](https://github.com/eriveltondasilva/option.js/actions)
 [![Checked with Biome](https://img.shields.io/badge/Checked_with-Biome-60a5fa?logo=biome)](https://biomejs.dev)
-[![Zero Dependencies](https://img.shields.io/badge/dependencies-0-blue)](https://www.npmjs.com/package/@eriveltondasilva/option.js)
+[![Zero Dependencies](https://img.shields.io/badge/dependencies-0-green)](https://www.npmjs.com/package/@eriveltondasilva/option.js)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 A lightweight, type-safe library inspired by Rust's `Option` enum for handling optional values in JavaScript and TypeScript without `null` or `undefined` pitfalls.
