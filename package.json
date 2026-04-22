@@ -44,7 +44,7 @@
     "clean": "rimraf dist",
     "prepublishOnly": "NODE_ENV=production bun run build",
     "preversion": "bun run types && bun run check:ci",
-    "postversion": "git push && git push --tags",
+    "postversion": "git push --tags",
     "fix": "bun run types && bun run check:fix",
     "fmt": "bunx --bun @biomejs/biome format .",
     "fmt:fix": "bunx --bun @biomejs/biome format --write .",
