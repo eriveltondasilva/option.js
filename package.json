@@ -31,15 +31,16 @@
     "./package.json": "./package.json"
   },
   "main": "./dist/index.js",
-  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE.md"
   ],
   "scripts": {
     "build": "bun run clean && tsup",
     "clean": "rimraf dist",
-    "prepublishOnly": "bun run build",
+    "prepublishOnly": "NODE_ENV=production bun run build",
     "preversion": "bun run types && bun run check:ci",
     "postversion": "git push && git push --tags",
     "fix": "bun run types && bun run check:fix",
