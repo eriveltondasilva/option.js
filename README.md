@@ -104,7 +104,7 @@ MIT © [Erivelton Silva](https://github.com/eriveltondasilva)
 
 If you find this library useful, check out my other functional utilities:
 
-**[@eriveltonsilva/result.js](https://www.npmjs.com/package/@eriveltondasilva/result.js)** — A type-safe way to handle errors and successes without `try/catch` overhead, inspired by Rust's `Result` type.
+**[@eriveltondasilva/result.js](https://www.npmjs.com/package/@eriveltondasilva/result.js)** — A type-safe way to handle errors and successes without `try/catch` overhead, inspired by Rust's `Result` type.
 
 ```typescript
 import { Option } from '@eriveltondasilva/option.js'
