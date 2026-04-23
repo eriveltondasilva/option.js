@@ -29,6 +29,7 @@ This will:
 - Update `package.json`
 - Create commit
 - Create git tag
+- Push commit and tag
 
 ### 3. Push branch and tags
 
@@ -57,8 +58,11 @@ After merge, the tag triggers the GitHub Action that:
 ```bash
 git checkout main
 git pull origin main
+
 git branch -d release/v1.x.x
-git push origin --delete release/v1.x.x
+git push origin -d release/v1.x.x
+
+git push origin -d release/v1.x.x && git branch -d release/v1.x.x
 ```
 
 ## Update CHANGELOG

@@ -1,1 +1,2 @@
-bun run check:fix && bun run test
+# .husky/pre-push
+bun run types && bun run check:ci && bun run test

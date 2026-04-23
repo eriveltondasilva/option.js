@@ -93,7 +93,8 @@ jobs:
         run: |
           mkdir -p test-install && cd test-install
 
-          bun init -m -y
+          echo '{"name":"test-install","type":"module"}' > package.json
+
           bun add ../*.tgz
 
           bun -e "
