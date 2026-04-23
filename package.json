@@ -75,5 +75,8 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "lint-staged": {
+    "*.{js,ts,json,md}": "bunx --bun @biomejs/biome check --write --no-errors-on-unmatched"
   }
 }

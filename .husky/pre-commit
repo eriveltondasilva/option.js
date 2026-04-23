@@ -1,2 +1,2 @@
 # .husky/pre-commit
-bun run check:fix && git add -u
+bunx lint-staged
