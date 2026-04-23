@@ -1,1 +1,2 @@
-bun run fix
+# .husky/pre-commit
+bun run check:fix && git add -u
