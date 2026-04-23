@@ -43,7 +43,7 @@
     "build": "bun run clean && tsup",
     "clean": "rimraf dist",
     "prepublishOnly": "NODE_ENV=production bun run build",
-    "preversion": "bun run types && bun run check:ci",
+    "preversion": "bun run types && bun run check:fix",
     "postversion": "git push && git push --tags",
     "fix": "bun run types && bun run check:fix",
     "fmt": "bunx --bun @biomejs/biome format .",
