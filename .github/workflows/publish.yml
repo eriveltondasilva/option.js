@@ -84,7 +84,7 @@ jobs:
           echo "✅ Build output verified"
 
       - name: Pack
-        run: npm pack
+        run: bun pm pack
 
       - name: Validate package
         run: bunx publint
@@ -93,17 +93,17 @@ jobs:
         run: |
           mkdir -p test-install && cd test-install
 
-          npm init -y
-          npm install ../*.tgz
+          bun init -m -y
+          bun add ../*.tgz
 
-          node -e "
+          bun -e "
             import('${{ steps.pkg.outputs.name }}')
               .then((m) => { console.log('✅ Package import successful'); console.log('📦 Exports:', Object.keys(m)); process.exit(0); })
               .catch((e) => { console.error('❌ Package import failed:', e); process.exit(1); })
           "
 
       - name: Publish to NPM (no scripts)
-        run: npm publish --ignore-scripts
+        run: npm publish --provenance --ignore-scripts
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         # O bun não tem suporte oficial a provenance, então usar o npm para publicar
