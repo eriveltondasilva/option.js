@@ -237,7 +237,7 @@ function all<TOption>(options: Option<TOption>[]): Option<TOption[]> {
   for (const [i, option] of options.entries()) {
     if (!isOption(option)) {
       throw new ResultTypeError(
-        `Result.all() | Result.collect() received an invalid value at index [${i}]: expected a Option, got "${typeof option}"`,
+        `Option.all() | Option.collect() received an invalid value at index [${i}]: expected a Option, got "${typeof option}"`,
         option,
       );
     }
@@ -317,7 +317,7 @@ function values<TOption>(options: Option<TOption>[]): TOption[] {
   for (const [i, option] of options.entries()) {
     if (!isOption(option)) {
       throw new ResultTypeError(
-        `Result.values() received an invalid value at index [${i}]: expected a Option, got "${typeof option}"`,
+        `Option.values() received an invalid value at index [${i}]: expected a Option, got "${typeof option}"`,
         option,
       );
     }
