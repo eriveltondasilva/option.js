@@ -1,9 +1,9 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: arquivo de testes */
 import { describe, expect, it, vi } from 'vitest';
 
-import { NoneUnwrapError } from '@/errors.ts';
-import { NoneClass as None } from '@/none.ts';
-import * as Option from '@/option.ts';
+import { None } from '@/none.ts';
+import { option as Option } from '@/option.ts';
+import { NoneUnwrapError } from '@/utils';
 
 const expectNone = (opt: any) => {
   expect(opt.isNone()).toBe(true);
@@ -232,7 +232,7 @@ describe('None', () => {
         .or(Option.some(10))
         .map((v) => {
           calls.push('map-after-or');
-          return v * 2;
+          return (v as number) * 2;
         })
         .unwrap();
 

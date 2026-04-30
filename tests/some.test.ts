@@ -1,8 +1,8 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: arquivo de testes */
 import { describe, expect, it, vi } from 'vitest';
 
-import { NoneClass as None } from '@/none.ts';
-import * as Option from '@/option.ts';
+import { None } from '@/none.ts';
+import { option as Option } from '@/option.ts';
 import { Some } from '@/some.ts';
 
 const expectSome = <T>(opt: any, value: T) => {

@@ -1,7 +1,7 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: arquivo de testes */
 import { describe, expect, it } from 'vitest';
 
-import * as Option from '@/option.ts';
+import { option as Option } from '@/option.ts';
 
 describe('Type Guards', () => {
   describe('isSome', () => {
