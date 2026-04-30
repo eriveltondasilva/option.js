@@ -10,13 +10,10 @@
     "noPropertyAccessFromIndexSignature": true,
 
     // Module resolution
-    "rootDir": "./src",
-    "outDir": "./dist",
-
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["src/*"]
     }
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src/**/*.ts", "tests/**/*.ts"]
 }

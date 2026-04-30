@@ -1,11 +1,11 @@
-import { defineConfig } from 'tsup'
+import { defineConfig } from 'tsup';
 
-import pkg from './package.json'
+import pkg from './package.json';
 
-const { name, description, version, author, license, homepage } = pkg
-const year = new Date().getFullYear()
+const { name, description, version, author, license, homepage } = pkg;
+const year = new Date().getFullYear();
 
-const isProduction = process.env.NODE_ENV === 'production'
+const isProduction = process.env.NODE_ENV === 'production';
 
 export const banner = `
 /**
@@ -22,11 +22,12 @@ export const banner = `
  * Inspired by:
  * @see https://doc.rust-lang.org/std/option - Rust Option Type
  * @see https://hexdocs.pm/gleam_stdlib/gleam/option.html - Gleam Option Type
- */`
+ */`;
 
 export default defineConfig([
   {
     entry: ['./src/index.ts'],
+    tsconfig: './tsconfig.build.json',
     banner: { js: banner },
     dts: { banner },
     format: ['esm'],
@@ -35,4 +36,4 @@ export default defineConfig([
     sourcemap: !isProduction,
     minify: isProduction,
   },
-])
+]);
