@@ -12,7 +12,7 @@ export interface OptionMethods<T> {
    * Option.some(2).isSome() // => true
    * Option.none().isSome()  // => false
    */
-  isSome(): this is ISome<T>
+  isSome(): this is ISome<T>;
 
   /**
    * Returns `true` if the option is a `None` value.
@@ -25,7 +25,7 @@ export interface OptionMethods<T> {
    * Option.none().isNone()  // => true
    * Option.some(2).isNone() // => false
    */
-  isNone(): this is INone
+  isNone(): this is INone;
 
   /**
    * Returns `true` if the option is a `Some` and the value inside matches the predicate.
@@ -39,7 +39,7 @@ export interface OptionMethods<T> {
    * Option.some(2).isSomeAnd((v) => v > 1) // => true
    * Option.some(1).isSomeAnd((v) => v > 1) // => false
    */
-  isSomeAnd(predicate: (value: T) => boolean): boolean
+  isSomeAnd(predicate: (value: T) => boolean): boolean;
 
   /**
    * Returns `true` if the option is a `None`, or if it is a `Some` and the value matches the predicate.
@@ -53,7 +53,7 @@ export interface OptionMethods<T> {
    * Option.some(2).isNoneOr((v) => v > 1) // => false
    * Option.some(1).isNoneOr((v) => v > 1) // => true
    */
-  isNoneOr(predicate: (value: T) => boolean): boolean
+  isNoneOr(predicate: (value: T) => boolean): boolean;
 
   // #endregion
 
@@ -72,7 +72,7 @@ export interface OptionMethods<T> {
    * Option.none().unwrap()
    * // => throws NoneUnwrapError('...')
    */
-  unwrap(): T
+  unwrap(): T;
 
   /**
    * Returns the contained `Some` value.
@@ -88,7 +88,7 @@ export interface OptionMethods<T> {
    * Option.none().expect('Custom error message')
    * // => throws NoneUnwrapError('Custom error message')
    */
-  expect(message: string): T
+  expect(message: string): T;
 
   /**
    * Returns the contained `Some` value or a provided default.
@@ -103,7 +103,7 @@ export interface OptionMethods<T> {
    * Option.some(42).unwrapOr(99) // => 42
    * Option.none().unwrapOr(99)   // => 99
    */
-  unwrapOr<U>(defaultValue: U): T | U
+  unwrapOr<U>(defaultValue: U): T | U;
 
   /**
    * Returns the contained `Some` value or computes it from a closure.
@@ -118,7 +118,7 @@ export interface OptionMethods<T> {
    * Option.some(42).unwrapOrElse(() => 99) // => 42
    * Option.none().unwrapOrElse(() => 99)     // => 99
    */
-  unwrapOrElse<U>(fn: () => U): T | U
+  unwrapOrElse<U>(fn: () => U): T | U;
 
   // #endregion
 
@@ -138,7 +138,7 @@ export interface OptionMethods<T> {
    * Option.some("Hello").map((s) => s.length) // => Some(5)
    * Option.none().map((s) => s.length)        // => None
    */
-  map<U>(fn: (value: T) => U): IOption<U>
+  map<U>(fn: (value: T) => U): IOption<U>;
 
   /**
    * Returns the provided default result (if `None`),
@@ -155,7 +155,7 @@ export interface OptionMethods<T> {
    * Option.some("Hello").mapOr((s) => s.length, 0) // => 5
    * Option.none().mapOr((s) => s.length, 0)        // => 0
    */
-  mapOr<U>(fn: (value: T) => U, defaultValue: U): U
+  mapOr<U>(fn: (value: T) => U, defaultValue: U): U;
 
   /**
    * Computes a default function result (if `None`),
@@ -172,7 +172,7 @@ export interface OptionMethods<T> {
    * Option.some("Hello").mapOrElse((s) => s.length, () => 0) // => 5
    * Option.none().mapOrElse((s) => s.length, () => 0)        // => 0
    */
-  mapOrElse<U>(fn: (value: T) => U, defaultFn: () => U): U
+  mapOrElse<U>(fn: (value: T) => U, defaultFn: () => U): U;
 
   /**
    * Returns `None` if the option is `None`, otherwise calls the predicate with the wrapped value and returns:
@@ -188,7 +188,7 @@ export interface OptionMethods<T> {
    * Option.some(10).filter((val) => val > 5) // => Some(10)
    * Option.some(10).filter((val) => val > 15) // => None
    */
-  filter(predicate: (value: T) => boolean): IOption<T>
+  filter(predicate: (value: T) => boolean): IOption<T>;
 
   /**
    * Converts from `Option<Option<T>>` to `Option<T>`.
@@ -202,7 +202,7 @@ export interface OptionMethods<T> {
    * Option.some(Option.some(10)).flatten() // => Some(10)
    * Option.some(Option.none()).flatten()   // => None
    */
-  flatten(this: IOption<IOption<T>>): IOption<T>
+  flatten(this: IOption<IOption<T>>): IOption<T>;
 
   // #endregion
 
@@ -221,7 +221,7 @@ export interface OptionMethods<T> {
    * Option.some(10).and(Option.some(20)) // => Some(20)
    * Option.some(10).and(Option.none())   // => None
    */
-  and<U>(other: IOption<U>): IOption<U>
+  and<U>(other: IOption<U>): IOption<U>;
 
   /**
    * Returns `None` if the option is `None`, otherwise calls `fn` with the wrapped value and returns the result.
@@ -237,7 +237,7 @@ export interface OptionMethods<T> {
    * Option.some(10).andThen((val) => Option.some(val + 10)) // => Some(20)
    * Option.some(10).andThen((val) => Option.none())         // => None
    */
-  andThen<U>(fn: (value: T) => IOption<U>): IOption<U>
+  andThen<U>(fn: (value: T) => IOption<U>): IOption<U>;
 
   /**
    * Returns the option if it contains a value, otherwise returns the `other` option.
@@ -252,7 +252,7 @@ export interface OptionMethods<T> {
    * Option.some(10).or(Option.some(20)) // => Some(10)
    * Option.some(10).or(Option.none())   // => Some(10)
    */
-  or<U>(other: IOption<U>): IOption<T | U>
+  or<U>(other: IOption<U>): IOption<T | U>;
 
   /**
    * Returns the option if it contains a value, otherwise calls `fn` and returns the result.
@@ -267,7 +267,7 @@ export interface OptionMethods<T> {
    * Option.some(10).orElse(() => Option.some(20)) // => Some(10)
    * Option.some(10).orElse(() => Option.none())   // => Some(10)
    */
-  orElse<U>(fn: () => IOption<U>): IOption<T | U>
+  orElse<U>(fn: () => IOption<U>): IOption<T | U>;
 
   // #endregion
 
@@ -286,7 +286,7 @@ export interface OptionMethods<T> {
    * Option.some(10).zip(Option.some(20)) // => Some([10, 20])
    * Option.some(10).zip(Option.none())   // => None
    */
-  zip<U>(other: IOption<U>): IOption<[T, U]>
+  zip<U>(other: IOption<U>): IOption<[T, U]>;
 
   /**
    * Zips the current option with another option, applying the given function if both are `Some`.
@@ -302,7 +302,7 @@ export interface OptionMethods<T> {
    * Option.some(10).zipWith(Option.some(20), (a, b) => a + b) // => Some(30)
    * Option.some(10).zipWith(Option.none(), (a, b) => a + b)   // => None
    */
-  zipWith<U, R>(other: IOption<U>, fn: (a: T, b: U) => R): IOption<R>
+  zipWith<U, R>(other: IOption<U>, fn: (a: T, b: U) => R): IOption<R>;
 
   // #endregion
 
@@ -323,7 +323,7 @@ export interface OptionMethods<T> {
    *   none: () => 0
    * }); // => 10
    */
-  match<U>(handlers: { some: (value: T) => U; none: () => U }): U
+  match<U>(handlers: { some: (value: T) => U; none: () => U }): U;
 
   /**
    * Calls the provided closure with a reference to the contained value (if `Some`), and returns the original option.
@@ -337,7 +337,7 @@ export interface OptionMethods<T> {
    * Option.some(10).inspect((val) => console.log('got: ' + val))
    * // => Some(10)
    */
-  inspect(fn: (value: T) => void): IOption<T>
+  inspect(fn: (value: T) => void): IOption<T>;
 
   /**
    * Alias for `inspect`. Useful for side-effects in chaining.
@@ -351,7 +351,7 @@ export interface OptionMethods<T> {
    * Option.some(10).tap((val) => console.log('got: ' + val))
    * // => Some(10)
    */
-  tap(fn: (value: T) => void): IOption<T>
+  tap(fn: (value: T) => void): IOption<T>;
 
   // #endregion
 
@@ -368,7 +368,7 @@ export interface OptionMethods<T> {
    * Option.some(10).toNullable() // => 10
    * Option.none().toNullable()   // => null
    */
-  toNullable(): T | null
+  toNullable(): T | null;
 
   /**
    * Converts the Option into an undefined value (`T | undefined`).
@@ -381,7 +381,7 @@ export interface OptionMethods<T> {
    * Option.some(10).toUndefined() // => 10
    * Option.none().toUndefined()   // => undefined
    */
-  toUndefined(): T | undefined
+  toUndefined(): T | undefined;
 
   // TODO: implement these methods
   // toString(): string
@@ -397,14 +397,14 @@ export interface OptionMethods<T> {
  * @template T
  */
 export interface ISome<T> extends OptionMethods<T> {
-  readonly _tag: 'Some'
+  readonly _tag: 'Some';
 }
 
 /**
  * Represents an option that does not contain a value.
  */
 export interface INone extends OptionMethods<never> {
-  readonly _tag: 'None'
+  readonly _tag: 'None';
 }
 
 /**
@@ -412,11 +412,11 @@ export interface INone extends OptionMethods<never> {
  *
  * @template T
  */
-export type IOption<T> = ISome<T> | INone
+export type IOption<T> = ISome<T> | INone;
 
 /**
  * Represents an async option that may or may not contain a value.
  *
  * @template T
  */
-export type IAsyncOption<T> = Promise<IOption<T>>
+export type IAsyncOption<T> = Promise<IOption<T>>;

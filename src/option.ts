@@ -1,6 +1,7 @@
-import { NoneClass as None } from './none.ts'
-import { Some } from './some.ts'
-import type { IAsyncOption, INone, IOption, ISome } from './types.ts'
+import type { IAsyncOption, INone, IOption, ISome } from './types.ts';
+
+import { NoneClass as None } from './none.ts';
+import { Some } from './some.ts';
 
 // #region Type Guards
 
@@ -19,7 +20,7 @@ import type { IAsyncOption, INone, IOption, ISome } from './types.ts'
  * Option.isSome(Option.none())   // => false
  */
 function isSome<T>(value: unknown): value is ISome<T> {
-  return value != null && typeof value === 'object' && '_tag' in value && value._tag === 'Some'
+  return value != null && typeof value === 'object' && '_tag' in value && value._tag === 'Some';
 }
 
 /**
@@ -37,7 +38,7 @@ function isSome<T>(value: unknown): value is ISome<T> {
  * Option.isNone(Option.some(42)) // => false
  */
 function isNone(value: unknown): value is INone {
-  return value != null && typeof value === 'object' && '_tag' in value && value._tag === 'None'
+  return value != null && typeof value === 'object' && '_tag' in value && value._tag === 'None';
 }
 
 /**
@@ -61,7 +62,7 @@ function isOption<T>(value: unknown): value is IOption<T> {
     typeof value === 'object' &&
     '_tag' in value &&
     (value._tag === 'Some' || value._tag === 'None')
-  )
+  );
 }
 
 // #endregion
@@ -82,7 +83,7 @@ function isOption<T>(value: unknown): value is IOption<T> {
  * Option.some({ value: 'hello' }) // => Some({ value: 'hello' })
  */
 function some<T>(value: T): ISome<T> {
-  return new Some<T>(value)
+  return new Some<T>(value);
 }
 
 /**
@@ -96,7 +97,7 @@ function some<T>(value: T): ISome<T> {
  * Option.none() // => None
  */
 function none(): INone {
-  return None
+  return None;
 }
 
 /**
@@ -115,9 +116,9 @@ function none(): INone {
  */
 function fromTry<T>(fn: () => T): IOption<T> {
   try {
-    return new Some(fn())
+    return new Some(fn());
   } catch {
-    return None
+    return None;
   }
 }
 
@@ -137,9 +138,9 @@ function fromTry<T>(fn: () => T): IOption<T> {
  */
 async function fromPromise<T>(fn: () => Promise<T>): IAsyncOption<T> {
   try {
-    return new Some(await fn())
+    return new Some(await fn());
   } catch {
-    return None
+    return None;
   }
 }
 
@@ -159,7 +160,7 @@ async function fromPromise<T>(fn: () => Promise<T>): IAsyncOption<T> {
  * Option.fromNullable(undefined) // => None
  */
 function fromNullable<T>(value: T | null | undefined): IOption<NonNullable<T>> {
-  return value == null ? None : new Some(value)
+  return value == null ? None : new Some(value);
 }
 
 /**
@@ -178,7 +179,7 @@ function fromNullable<T>(value: T | null | undefined): IOption<NonNullable<T>> {
  * Option.validate(5, (val) => val > 10)  // => None
  */
 function validate<T>(value: T, fn: (value: T) => boolean): IOption<T> {
-  return fn(value) ? new Some(value) : None
+  return fn(value) ? new Some(value) : None;
 }
 
 // #endregion
@@ -210,20 +211,20 @@ function validate<T>(value: T, fn: (value: T) => boolean): IOption<T> {
  * // => Error('...')
  */
 function all<T>(options: IOption<T>[], name = 'all'): IOption<T[]> {
-  if (!Array.isArray(options)) return new Some([])
+  if (!Array.isArray(options)) return new Some([]);
 
-  const someValues: T[] = []
+  const someValues: T[] = [];
 
   for (const [i, option] of options.entries()) {
     if (!isOption(option))
       throw new Error(
         `Option.${name}() called with non-Option value at index ${i}: ${typeof option}`,
-      )
-    if (option.isNone()) return None
-    someValues.push(option.unwrap())
+      );
+    if (option.isNone()) return None;
+    someValues.push(option.unwrap());
   }
 
-  return new Some(someValues)
+  return new Some(someValues);
 }
 
 /**
@@ -254,7 +255,7 @@ function all<T>(options: IOption<T>[], name = 'all'): IOption<T[]> {
  * // => Error('...')
  */
 function collect<T>(options: IOption<T>[]): IOption<T[]> {
-  return all(options, 'collect')
+  return all(options, 'collect');
 }
 
 /**
@@ -279,19 +280,19 @@ function collect<T>(options: IOption<T>[]): IOption<T[]> {
  * // => Error('...')
  */
 function values<T>(options: IOption<T>[]): T[] {
-  if (!Array.isArray(options)) return []
+  if (!Array.isArray(options)) return [];
 
-  const someValues: T[] = []
+  const someValues: T[] = [];
 
   for (const [i, option] of options.entries()) {
     if (!isOption(option))
       throw new Error(
         `Option.values() called with non-Option value at index ${i}: ${typeof option}`,
-      )
-    if (option.isSome()) someValues.push(option.unwrap())
+      );
+    if (option.isSome()) someValues.push(option.unwrap());
   }
 
-  return someValues
+  return someValues;
 }
 
 // #endregion
@@ -309,4 +310,4 @@ export {
   some,
   validate,
   values,
-}
+};
