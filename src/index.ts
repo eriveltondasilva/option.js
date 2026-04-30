@@ -1,11 +1,6 @@
-import type { IAsyncOption, IOption } from './types.ts';
+import type { Option as _Option } from './types';
 
-import * as option from './option.ts';
-
-export type Option<T> = IOption<T>;
-export type AsyncOption<T> = IAsyncOption<T>;
-
-export const { some, none } = option;
+import { option } from './option';
 
 /**
  * Type-safe optional values inspired by Rust's `Option<T>`.
@@ -47,5 +42,11 @@ export const { some, none } = option;
  * Option.all([some(1), some(2)])  // => Some([1, 2])
  * Option.values([some(1), none()]) // => [1]
  */
-export const Option = Object.freeze({ ...option });
+export const Option = Object.freeze(option);
+
+export const { some, none } = option;
+export type Option<T> = _Option<T>;
+
+export type { AsyncOption, None, Some } from './types';
+
 export default Option;

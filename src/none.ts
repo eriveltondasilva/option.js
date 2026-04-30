@@ -1,25 +1,27 @@
-import type { INone, IOption, ISome } from './types.ts';
+import type { None as _None, Option, Some } from './types';
+import type { MatchCases } from './types/methods';
 
-import { NoneUnwrapError } from './errors.ts';
+import { TAG } from './brand';
+import { NoneUnwrapError } from './utils';
 
-class None implements INone {
-  readonly _tag = 'None';
+class NoneClass implements _None {
+  readonly _tag = TAG.None;
 
   // #region Type Guards
 
-  isSome(): this is ISome<never> {
+  isSome(): this is Some<never> {
     return false;
   }
 
-  isNone(): this is INone {
+  isNone(): this is _None {
     return true;
   }
 
-  isSomeAnd(_predicate: (value: never) => boolean): boolean {
+  isSomeAnd(_condition: (value: never) => boolean): boolean {
     return false;
   }
 
-  isNoneOr(_predicate: (value: never) => boolean): boolean {
+  isNoneOr(_condition: (value: never) => boolean): boolean {
     return true;
   }
 
@@ -31,8 +33,8 @@ class None implements INone {
     throw new NoneUnwrapError();
   }
 
-  expect(message: string): never {
-    throw new NoneUnwrapError(message);
+  expect(reason: string): never {
+    throw new NoneUnwrapError(reason);
   }
 
   unwrapOr<U>(defaultValue: U): U {
@@ -71,19 +73,19 @@ class None implements INone {
 
   // #region Alternation
 
-  and<U>(_other: IOption<U>): this {
+  and<U>(_other: Option<U>): this {
     return this;
   }
 
-  andThen<U>(_fn: (value: never) => IOption<U>): this {
+  andThen<U>(_fn: (value: never) => Option<U>): this {
     return this;
   }
 
-  or<U>(other: IOption<U>): IOption<U> {
+  or<U>(other: Option<U>): Option<U> {
     return other;
   }
 
-  orElse<U>(fn: () => IOption<U>): IOption<U> {
+  orElse<U>(fn: () => Option<U>): Option<U> {
     return fn();
   }
 
@@ -91,11 +93,11 @@ class None implements INone {
 
   // #region Combination
 
-  zip<U>(_other: IOption<U>): IOption<[never, U]> {
+  zip<U>(_other: Option<U>): Option<[never, U]> {
     return this;
   }
 
-  zipWith<U, R>(_other: IOption<U>, _fn: (a: never, b: U) => R): IOption<R> {
+  zipWith<U, R>(_other: Option<U>, _fn: (a: never, b: U) => R): Option<R> {
     return this;
   }
 
@@ -103,8 +105,8 @@ class None implements INone {
 
   // #region Inspection
 
-  match<U>(handlers: { some: (value: never) => U; none: () => U }): U {
-    return handlers.none();
+  match<U>(cases: MatchCases<never, U>): U {
+    return cases.none();
   }
 
   inspect(_fn: (value: never) => void): this {
@@ -127,8 +129,19 @@ class None implements INone {
     return undefined;
   }
 
+  toString(): string {
+    return 'None';
+  }
+
+  toJSON(): { type: 'none'; value: undefined } {
+    return {
+      type: 'none',
+      value: undefined,
+    };
+  }
+
   // #endregion
 }
 
 // # Singleton — None é imutável e não carrega estado
-export const NoneClass = new None();
+export const None = new NoneClass();

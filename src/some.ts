@@ -1,9 +1,12 @@
-import type { INone, IOption, ISome } from './types.ts';
+import type { None as _None, Some as _Some, Option } from './types';
+import type { MatchCases } from './types/methods';
 
-import { NoneClass as None } from './none.ts';
+import { TAG } from './brand';
+import { None } from './none';
+import { formatForDisplay } from './utils';
 
-export class Some<T> implements ISome<T> {
-  readonly _tag = 'Some';
+export class Some<T> implements _Some<T> {
+  readonly _tag = TAG.Some;
   readonly #value: T;
 
   constructor(value: T) {
@@ -12,20 +15,20 @@ export class Some<T> implements ISome<T> {
 
   // #region Type Guards
 
-  isSome(): this is ISome<T> {
+  isSome(): this is _Some<T> {
     return true;
   }
 
-  isNone(): this is INone {
+  isNone(): this is _None {
     return false;
   }
 
-  isSomeAnd(predicate: (value: T) => boolean): boolean {
-    return predicate(this.#value);
+  isSomeAnd(condition: (value: T) => boolean): boolean {
+    return condition(this.#value);
   }
 
-  isNoneOr(predicate: (value: T) => boolean): boolean {
-    return predicate(this.#value);
+  isNoneOr(condition: (value: T) => boolean): boolean {
+    return condition(this.#value);
   }
 
   // #endregion
@@ -52,7 +55,7 @@ export class Some<T> implements ISome<T> {
 
   // #region Transformation
 
-  map<U>(fn: (value: T) => U): IOption<U> {
+  map<U>(fn: (value: T) => U): Option<U> {
     return new Some(fn(this.#value));
   }
 
@@ -64,11 +67,11 @@ export class Some<T> implements ISome<T> {
     return fn(this.#value);
   }
 
-  filter(predicate: (value: T) => boolean): IOption<T> {
+  filter(predicate: (value: T) => boolean): Option<T> {
     return predicate(this.#value) ? this : None;
   }
 
-  flatten<U>(this: Some<IOption<U>>): IOption<U> {
+  flatten<U>(this: Some<Option<U>>): Option<U> {
     return this.#value;
   }
 
@@ -76,19 +79,19 @@ export class Some<T> implements ISome<T> {
 
   // #region Alternation
 
-  and<U>(other: IOption<U>): IOption<U> {
+  and<U>(other: Option<U>): Option<U> {
     return other;
   }
 
-  andThen<U>(fn: (value: T) => IOption<U>): IOption<U> {
+  andThen<U>(fn: (value: T) => Option<U>): Option<U> {
     return fn(this.#value);
   }
 
-  or<U>(_other: IOption<U>): this {
+  or<U>(_other: Option<U>): this {
     return this;
   }
 
-  orElse<U>(_fn: () => IOption<U>): this {
+  orElse<U>(_fn: () => Option<U>): this {
     return this;
   }
 
@@ -96,11 +99,11 @@ export class Some<T> implements ISome<T> {
 
   // #region Combination
 
-  zip<U>(other: IOption<U>): IOption<[T, U]> {
+  zip<U>(other: Option<U>): Option<[T, U]> {
     return other.isSome() ? new Some<[T, U]>([this.#value, other.unwrap()]) : None;
   }
 
-  zipWith<U, R>(other: IOption<U>, fn: (a: T, b: U) => R): IOption<R> {
+  zipWith<U, R>(other: Option<U>, fn: (a: T, b: U) => R): Option<R> {
     return other.isSome() ? new Some(fn(this.#value, other.unwrap())) : None;
   }
 
@@ -108,8 +111,8 @@ export class Some<T> implements ISome<T> {
 
   // #region Inspection
 
-  match<U>(handlers: { some: (value: T) => U; none: () => U }): U {
-    return handlers.some(this.#value);
+  match<U>(cases: MatchCases<T, U>): U {
+    return cases.some(this.#value);
   }
 
   inspect(fn: (value: T) => void): this {
@@ -132,6 +135,17 @@ export class Some<T> implements ISome<T> {
 
   toUndefined(): T {
     return this.#value;
+  }
+
+  toString(): string {
+    return `Some(${formatForDisplay(this.#value)})`;
+  }
+
+  toJSON(): { type: 'some'; value: T } {
+    return {
+      type: 'some',
+      value: this.#value,
+    };
   }
 
   // #endregion
