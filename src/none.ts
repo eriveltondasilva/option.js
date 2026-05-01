@@ -1,10 +1,10 @@
-import type { None as _None, Option, Some } from './types';
+import type { None, Option, Some } from './types';
 import type { MatchCases } from './types/methods';
 
 import { TAG } from './brand';
 import { NoneUnwrapError } from './utils';
 
-class NoneClass implements _None {
+class NoneClass implements None {
   readonly _tag = TAG.None;
 
   // #region Type Guards
@@ -13,7 +13,7 @@ class NoneClass implements _None {
     return false;
   }
 
-  isNone(): this is _None {
+  isNone(): this is None {
     return true;
   }
 
@@ -65,7 +65,7 @@ class NoneClass implements _None {
     return this;
   }
 
-  flatten(): this {
+  flatten<U>(this: None): Option<U> {
     return this;
   }
 
@@ -93,11 +93,11 @@ class NoneClass implements _None {
 
   // #region Combination
 
-  zip<U>(_other: Option<U>): Option<[never, U]> {
+  zip<U>(_other: Option<U>): this {
     return this;
   }
 
-  zipWith<U, R>(_other: Option<U>, _fn: (a: never, b: U) => R): Option<R> {
+  zipWith<U, R>(_other: Option<U>, _fn: (value: never, otherValue: U) => R): this {
     return this;
   }
 
@@ -144,4 +144,4 @@ class NoneClass implements _None {
 }
 
 // # Singleton — None é imutável e não carrega estado
-export const None = new NoneClass();
+export const NONE = new NoneClass();

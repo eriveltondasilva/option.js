@@ -2,7 +2,7 @@ import type { None as _None, Some as _Some, Option } from './types';
 import type { MatchCases } from './types/methods';
 
 import { TAG } from './brand';
-import { None } from './none';
+import { NONE } from './none';
 import { formatForDisplay } from './utils';
 
 export class Some<T> implements _Some<T> {
@@ -68,11 +68,11 @@ export class Some<T> implements _Some<T> {
   }
 
   filter(predicate: (value: T) => boolean): Option<T> {
-    return predicate(this.#value) ? this : None;
+    return predicate(this.#value) ? this : NONE;
   }
 
-  flatten<U>(this: Some<Option<U>>): Option<U> {
-    return this.#value;
+  flatten<U>(this: _Some<Option<U>>): Option<U> {
+    return this.unwrap();
   }
 
   // #endregion
@@ -100,11 +100,11 @@ export class Some<T> implements _Some<T> {
   // #region Combination
 
   zip<U>(other: Option<U>): Option<[T, U]> {
-    return other.isSome() ? new Some<[T, U]>([this.#value, other.unwrap()]) : None;
+    return other.isSome() ? new Some<[T, U]>([this.#value, other.unwrap()]) : NONE;
   }
 
-  zipWith<U, R>(other: Option<U>, fn: (a: T, b: U) => R): Option<R> {
-    return other.isSome() ? new Some(fn(this.#value, other.unwrap())) : None;
+  zipWith<U, R>(other: Option<U>, fn: (value: T, otherValue: U) => R): Option<R> {
+    return other.isSome() ? new Some(fn(this.#value, other.unwrap())) : NONE;
   }
 
   // #endregion

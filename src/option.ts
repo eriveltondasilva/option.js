@@ -1,7 +1,7 @@
 import type { None as _None, Some as _Some, AsyncOption, Option } from './types';
 
 import { TAG } from './brand';
-import { None } from './none';
+import { NONE } from './none';
 import { Some } from './some';
 import { isEmptyArray, ResultTypeError } from './utils';
 
@@ -87,7 +87,7 @@ function isOption(value: unknown): value is Option<unknown> {
  * Option.some('hello')            // => Some('hello')
  * Option.some({ value: 'hello' }) // => Some({ value: 'hello' })
  */
-function some<TValue>(value: TValue): Some<TValue> {
+function some<TValue>(value: TValue): _Some<TValue> {
   return new Some(value);
 }
 
@@ -102,8 +102,8 @@ function some<TValue>(value: TValue): Some<TValue> {
  * @example
  * Option.none() // => None
  */
-function none(): _None {
-  return None;
+function none<T = never>(): Option<T> {
+  return NONE;
 }
 
 /**
@@ -128,7 +128,7 @@ function fromTry<TValue>(fn: () => TValue): Option<TValue> {
   try {
     return new Some(fn());
   } catch {
-    return None;
+    return NONE;
   }
 }
 
@@ -154,7 +154,7 @@ async function fromPromise<TValue>(fn: () => Promise<TValue>): AsyncOption<TValu
   try {
     return new Some(await fn());
   } catch {
-    return None;
+    return NONE;
   }
 }
 
@@ -176,7 +176,7 @@ async function fromPromise<TValue>(fn: () => Promise<TValue>): AsyncOption<TValu
  * Option.fromNullable(undefined) // => None
  */
 function fromNullable<TValue>(value: TValue | null | undefined): Option<NonNullable<TValue>> {
-  return value == null ? None : new Some(value);
+  return value == null ? NONE : new Some(value);
 }
 
 /**
@@ -197,7 +197,7 @@ function fromNullable<TValue>(value: TValue | null | undefined): Option<NonNulla
  * Option.validate(5, (val) => val > 10)  // => None
  */
 function validate<TValue>(value: TValue, fn: (value: TValue) => boolean): Option<TValue> {
-  return fn(value) ? new Some(value) : None;
+  return fn(value) ? new Some(value) : NONE;
 }
 
 // #endregion
@@ -243,7 +243,7 @@ function all<TOption>(options: Option<TOption>[]): Option<TOption[]> {
     }
 
     if (option.isNone()) {
-      return None;
+      return NONE;
     }
 
     someValues.push(option.unwrap());
