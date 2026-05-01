@@ -1,6 +1,9 @@
-import { NoneClass as None } from './none.ts'
-import { Some } from './some.ts'
-import type { IAsyncOption, INone, IOption, ISome } from './types.ts'
+import type { None as _None, Some as _Some, AsyncOption, Option } from './types';
+
+import { TAG } from './brand';
+import { NONE } from './none';
+import { Some } from './some';
+import { isEmptyArray, ResultTypeError } from './utils';
 
 // #region Type Guards
 
@@ -9,17 +12,17 @@ import type { IAsyncOption, INone, IOption, ISome } from './types.ts'
  *
  * @group Type Guards
  *
- * @see {@link isOption}
+ * @see {@link isNone} - for checking if value is None
+ * @see {@link isOption} - for checking if value is Option
  *
- * @param value The value to check.
- * @returns {boolean} True if value is Some, false otherwise.
+ * @param value - The value to check.
  *
  * @example
  * Option.isSome(Option.some(42)) // => true
  * Option.isSome(Option.none())   // => false
  */
-function isSome<T>(value: unknown): value is ISome<T> {
-  return value != null && typeof value === 'object' && '_tag' in value && value._tag === 'Some'
+function isSome(value: unknown): value is _Some<unknown> {
+  return value != null && typeof value === 'object' && '_tag' in value && value._tag === TAG.Some;
 }
 
 /**
@@ -27,17 +30,17 @@ function isSome<T>(value: unknown): value is ISome<T> {
  *
  * @group Type Guards
  *
- * @see {@link isOption}
+ * @see {@link isSome} - for checking if value is Some
+ * @see {@link isOption} - for checking if value is Option
  *
- * @param value The value to check.
- * @returns {boolean} True if value is None, false otherwise.
+ * @param value - The value to check.
  *
  * @example
  * Option.isNone(Option.none())   // => true
  * Option.isNone(Option.some(42)) // => false
  */
-function isNone(value: unknown): value is INone {
-  return value != null && typeof value === 'object' && '_tag' in value && value._tag === 'None'
+function isNone(value: unknown): value is _None {
+  return value != null && typeof value === 'object' && '_tag' in value && value._tag === TAG.None;
 }
 
 /**
@@ -45,23 +48,22 @@ function isNone(value: unknown): value is INone {
  *
  * @group Type Guards
  *
- * @see {@link isSome}
- * @see {@link isNone}
+ * @see {@link isSome} - for checking if value is Some
+ * @see {@link isNone} - for checking if value is None
  *
- * @param value The value to check.
- * @returns {boolean} True if value is an Option (Some<T> or None), false otherwise.
+ * @param value - The value to check.
  *
  * @example
  * Option.isOption(Option.some(42)) // => true
  * Option.isOption(Option.none())   // => true
  */
-function isOption<T>(value: unknown): value is IOption<T> {
+function isOption(value: unknown): value is Option<unknown> {
   return (
     value != null &&
     typeof value === 'object' &&
     '_tag' in value &&
-    (value._tag === 'Some' || value._tag === 'None')
-  )
+    (value._tag === TAG.Some || value._tag === TAG.None)
+  );
 }
 
 // #endregion
@@ -73,16 +75,20 @@ function isOption<T>(value: unknown): value is IOption<T> {
  *
  * @group Creation
  *
- * @param value The value to create an Option from.
- * @return An Option containing the value (Some<T>).
+ * @see {@link none} - for creating an empty Option
+ * @see {@link fromTry} - for creating an Option
+ *
+ * @template TValue - The type of the value.
+ *
+ * @param value - The value to create an Option from.
  *
  * @example
  * Option.some(42)                 // => Some(42)
  * Option.some('hello')            // => Some('hello')
  * Option.some({ value: 'hello' }) // => Some({ value: 'hello' })
  */
-function some<T>(value: T): ISome<T> {
-  return new Some<T>(value)
+function some<TValue>(value: TValue): _Some<TValue> {
+  return new Some(value);
 }
 
 /**
@@ -90,13 +96,14 @@ function some<T>(value: T): ISome<T> {
  *
  * @group Creation
  *
- * @returns An Option containing nothing (None).
+ * @see {@link some} - for creating an Option with a value
+ * @see {@link fromTry} - for creating an Option
  *
  * @example
  * Option.none() // => None
  */
-function none(): INone {
-  return None
+function none<T = never>(): Option<T> {
+  return NONE;
 }
 
 /**
@@ -104,20 +111,24 @@ function none(): INone {
  *
  * @group Creation
  *
- * @see {@link fromPromise}
+ * @see {@link some} - for creating an Option with a value
+ * @see {@link fromPromise} - for creating an AsyncOption
  *
- * @param fn The function to execute and create an Option from.
- * @return An Option containing the result of the function, or None if the function throws an error.
+ * @template TValue - The type of the value.
+ *
+ * @param fn - The function to execute and create an Option from.
  *
  * @example
- * Option.fromTry(() => 42)                       // => Some(42)
- * Option.fromTry(() => throw new Error('error')) // => None
+ * Option.fromTry(() => 42)
+ * // => Some(42)
+ * Option.fromTry(() => throw new Error('error'))
+ * // => None
  */
-function fromTry<T>(fn: () => T): IOption<T> {
+function fromTry<TValue>(fn: () => TValue): Option<TValue> {
   try {
-    return new Some(fn())
+    return new Some(fn());
   } catch {
-    return None
+    return NONE;
   }
 }
 
@@ -126,20 +137,24 @@ function fromTry<T>(fn: () => T): IOption<T> {
  *
  * @group Creation
  *
- * @see {@link fromTry}
+ * @see {@link some} - for creating an Option with a value
+ * @see {@link fromTry} - for creating an Option
  *
- * @param fn The function to execute and create an Option from.
- * @return An AsyncOption containing the result of the function, or None if the function throws an error.
+ * @template TValue - The type of the value.
+ *
+ * @param fn - The function to execute and create an Option from.
  *
  * @example
- * Option.fromPromise(async () => 42)                       // => Some(42)
- * Option.fromPromise(async () => throw new Error('error')) // => None
+ * Option.fromPromise(async () => 42)
+ * // => Some(42)
+ * Option.fromPromise(async () => throw new Error('error'))
+ * // => None
  */
-async function fromPromise<T>(fn: () => Promise<T>): IAsyncOption<T> {
+async function fromPromise<TValue>(fn: () => Promise<TValue>): AsyncOption<TValue> {
   try {
-    return new Some(await fn())
+    return new Some(await fn());
   } catch {
-    return None
+    return NONE;
   }
 }
 
@@ -148,18 +163,20 @@ async function fromPromise<T>(fn: () => Promise<T>): IAsyncOption<T> {
  *
  * @group Creation
  *
- * @see {@link fromTry}
+ * @see {@link some} - for creating an Option with a value
+ * @see {@link fromTry} - for creating an Option
  *
- * @param value The nullable value to create an Option from.
- * @return An Option containing the value, or None if the value is null or undefined.
+ * @template TValue - The type of the value.
+ *
+ * @param value - The nullable value to create an Option from.
  *
  * @example
  * Option.fromNullable(42)        // => Some(42)
  * Option.fromNullable(null)      // => None
  * Option.fromNullable(undefined) // => None
  */
-function fromNullable<T>(value: T | null | undefined): IOption<NonNullable<T>> {
-  return value == null ? None : new Some(value)
+function fromNullable<TValue>(value: TValue | null | undefined): Option<NonNullable<TValue>> {
+  return value == null ? NONE : new Some(value);
 }
 
 /**
@@ -167,18 +184,20 @@ function fromNullable<T>(value: T | null | undefined): IOption<NonNullable<T>> {
  *
  * @group Creation
  *
- * @see {@link some}
+ * @see {@link some} - for creating an Option with a value
+ * @see {@link fromTry} - for creating an Option
  *
- * @param value The value to validate.
- * @param fn The predicate to validate the value.
- * @return An Option containing the value if the predicate returns true, or None if the predicate returns false.
+ * @template TValue - The type of the value.
+ *
+ * @param value - The value to validate.
+ * @param fn - The predicate to validate the value.
  *
  * @example
  * Option.validate(42, (val) => val > 10) // => Some(42)
  * Option.validate(5, (val) => val > 10)  // => None
  */
-function validate<T>(value: T, fn: (value: T) => boolean): IOption<T> {
-  return fn(value) ? new Some(value) : None
+function validate<TValue>(value: TValue, fn: (value: TValue) => boolean): Option<TValue> {
+  return fn(value) ? new Some(value) : NONE;
 }
 
 // #endregion
@@ -190,12 +209,11 @@ function validate<T>(value: T, fn: (value: T) => boolean): IOption<T> {
  *
  * @group Collection
  *
- * @see {@link collect}
- * @see {@link values}
+ * @see {@link collect} - for creating an array
+ * @see {@link values} - for creating an array
  *
- * @param options An array of Options to extract values from.
- * @returns {IOption<T[]>} An Option containing an array of values if all options are Some, or None if any option is None.
- * @throws {Error} If array contains non-Option values
+ * @param options - An array of Options to extract values from.
+ * @throws {Error} - If array contains non-Option values
  *
  * @example
  * Option.all([Option.some(1), Option.some(2), Option.some(3)])
@@ -209,21 +227,29 @@ function validate<T>(value: T, fn: (value: T) => boolean): IOption<T> {
  * Option.all(['non-option'])
  * // => Error('...')
  */
-function all<T>(options: IOption<T>[], name = 'all'): IOption<T[]> {
-  if (!Array.isArray(options)) return new Some([])
-
-  const someValues: T[] = []
-
-  for (const [i, option] of options.entries()) {
-    if (!isOption(option))
-      throw new Error(
-        `Option.${name}() called with non-Option value at index ${i}: ${typeof option}`,
-      )
-    if (option.isNone()) return None
-    someValues.push(option.unwrap())
+function all<TOption>(options: Option<TOption>[]): Option<TOption[]> {
+  if (isEmptyArray(options)) {
+    return new Some([]);
   }
 
-  return new Some(someValues)
+  const someValues: TOption[] = [];
+
+  for (const [i, option] of options.entries()) {
+    if (!isOption(option)) {
+      throw new ResultTypeError(
+        `Option.all() | Option.collect() received an invalid value at index [${i}]: expected a Option, got "${typeof option}"`,
+        option,
+      );
+    }
+
+    if (option.isNone()) {
+      return NONE;
+    }
+
+    someValues.push(option.unwrap());
+  }
+
+  return new Some(someValues);
 }
 
 /**
@@ -234,12 +260,13 @@ function all<T>(options: IOption<T>[], name = 'all'): IOption<T[]> {
  *
  * @group Collection
  *
- * @see {@link all}
- * @see {@link values}
+ * @see {@link all} - for creating an array
+ * @see {@link values} - for creating an array
  *
- * @param options An array of Options to extract values from.
- * @returns {IOption<T[]>} An Option containing an array of values if all options are Some, or None if any option is None.
- * @throws {Error} If array contains non-Option values
+ * @template TOption - The type of the Option.
+ *
+ * @param options - An array of Options to extract values from.
+ * @throws {Error} - If array contains non-Option values
  *
  * @example
  * Option.collect([Option.some(1), Option.some(2), Option.some(3)])
@@ -253,8 +280,8 @@ function all<T>(options: IOption<T>[], name = 'all'): IOption<T[]> {
  * Option.collect(['non-option'])
  * // => Error('...')
  */
-function collect<T>(options: IOption<T>[]): IOption<T[]> {
-  return all(options, 'collect')
+function collect<TOption>(options: Option<TOption>[]): Option<TOption[]> {
+  return all(options);
 }
 
 /**
@@ -262,51 +289,64 @@ function collect<T>(options: IOption<T>[]): IOption<T[]> {
  *
  * @group Collection
  *
- * @see {@link all}
+ * @see {@link all} - for creating an array
+ * @see {@link collect} - for creating an array
  *
- * @param options An array of Options to extract values from.
- * @return An array of values from the Some options. None options are ignored.
- * @throws {Error} If array contains non-Option values
+ * @template TOption - The type of the Option.
+ *
+ * @param options - An array of Options to extract values from.
+ * @throws {Error} - If array contains non-Option values
  *
  * @example
  * Option.values([Option.some(1), Option.some(2), Option.some(3)])
  * // => [1, 2, 3]
- * Option.values([Option.some(1), Option.none(), Option.some(2), Option.none(), Option.some(3)])
- * // => [1, 2, 3]
+ * Option.values([Option.some(1), Option.none(), Option.some(2), Option.none()])
+ * // => [1, 2]
  * Option.values([])  // => []
  *
  * Option.values(['non-option'])
  * // => Error('...')
  */
-function values<T>(options: IOption<T>[]): T[] {
-  if (!Array.isArray(options)) return []
-
-  const someValues: T[] = []
-
-  for (const [i, option] of options.entries()) {
-    if (!isOption(option))
-      throw new Error(
-        `Option.values() called with non-Option value at index ${i}: ${typeof option}`,
-      )
-    if (option.isSome()) someValues.push(option.unwrap())
+function values<TOption>(options: Option<TOption>[]): TOption[] {
+  if (isEmptyArray(options)) {
+    return [];
   }
 
-  return someValues
+  const someValues: TOption[] = [];
+
+  for (const [i, option] of options.entries()) {
+    if (!isOption(option)) {
+      throw new ResultTypeError(
+        `Option.values() received an invalid value at index [${i}]: expected a Option, got "${typeof option}"`,
+        option,
+      );
+    }
+
+    if (option.isSome()) {
+      someValues.push(option.unwrap());
+    }
+  }
+
+  return someValues;
 }
 
 // #endregion
 
-export {
-  all,
-  collect,
+// biome-ignore format: off
+export const option = {
+  // Type guards
+  isNone,
+  isSome,
+  isOption,
+  // Creation
+  none,
+  some,
   fromNullable,
   fromPromise,
   fromTry,
-  isNone,
-  isOption,
-  isSome,
-  none,
-  some,
   validate,
+  // Collection
+  all,
+  collect,
   values,
-}
+};

@@ -1,59 +1,101 @@
-export interface OptionMethods<T> {
+import type { None, Option, Some } from '.';
+
+/**
+ * Represents the cases for matching an option.
+ *
+ * @template TValue - The type of the contained value.
+ * @template TOption - The type of the option.
+ *
+ * @see {@link OptionMethods.match}
+ *
+ * @example
+ * const cases: MatchCases<number, string> = {
+ *   some: (val) => `Some(${val})`,
+ *   none: () => 'None'
+ * }
+ */
+export type MatchCases<TValue, TOption> = {
+  /**
+   * The handler to execute if the option is `Some`.
+   *
+   * @see {@link OptionMethods.match} - for using the `MatchCases` type.
+   *
+   * @param value - The value contained in the `Some` option.
+   * @returns {TOption} - The result of the handler.
+   */
+  some: (value: TValue) => TOption;
+
+  /**
+   * The handler to execute if the option is `None`.
+   *
+   * @see {@link OptionMethods.match} - for using the `MatchCases` type.
+   *
+   * @returns {TOption} - The result of the handler.
+   */
+  none: () => TOption;
+};
+
+/**
+ * A collection of methods for working with Options.
+ *
+ * @template TValue - The type of the contained value.
+ */
+export interface OptionMethods<TValue> {
   // #region Type Guards
 
   /**
-   * Returns `true` if the option is a `Some` value.
+   * Returns `true` when this option is a {@link Some} value.
    *
    * @group Type Guards
    *
-   * @returns {boolean}
+   * @see {@link isNone} - for checking if value is None
    *
    * @example
    * Option.some(2).isSome() // => true
    * Option.none().isSome()  // => false
    */
-  isSome(): this is ISome<T>
+  isSome(): this is Some<TValue>;
 
   /**
-   * Returns `true` if the option is a `None` value.
+   * Returns `true` when this option is a {@link None} value.
    *
    * @group Type Guards
    *
-   * @returns {boolean}
+   * @see {@link isSome} - for checking if value is Some
    *
    * @example
    * Option.none().isNone()  // => true
    * Option.some(2).isNone() // => false
    */
-  isNone(): this is INone
+  isNone(): this is None;
 
   /**
-   * Returns `true` if the option is a `Some` and the value inside matches the predicate.
+   * Returns `true` when this option is a {@link Some} and the value matches the predicate.
    *
    * @group Type Guards
    *
-   * @param predicate - The function to evaluate the contained value.
-   * @returns {boolean}
+   * @see {@link isNone} - for checking if value is None
+   *
+   * @param condition - The function to evaluate the contained value.
    *
    * @example
    * Option.some(2).isSomeAnd((v) => v > 1) // => true
    * Option.some(1).isSomeAnd((v) => v > 1) // => false
    */
-  isSomeAnd(predicate: (value: T) => boolean): boolean
+  isSomeAnd(condition: (value: TValue) => boolean): boolean;
 
   /**
    * Returns `true` if the option is a `None`, or if it is a `Some` and the value matches the predicate.
    *
    * @group Type Guards
    *
-   * @param predicate - The function to evaluate the contained value.
-   * @returns {boolean}
+   * @param condition - The function to evaluate the contained value.
    *
    * @example
-   * Option.some(2).isNoneOr((v) => v > 1) // => false
-   * Option.some(1).isNoneOr((v) => v > 1) // => true
+   * Option.some(2).isNoneOr((v) => v > 1) // => true
+   * Option.some(1).isNoneOr((v) => v > 1) // => false
    */
-  isNoneOr(predicate: (value: T) => boolean): boolean
+  isNoneOr(condition: (value: TValue) => boolean): boolean;
 
   // #endregion
 
@@ -64,7 +106,7 @@ export interface OptionMethods<T> {
    *
    * @group Extraction
    *
-   * @returns {T} the contained value
+   * @returns {TValue} the contained value
    * @throws {NoneUnwrapError} if the value is None
    *
    * @example
@@ -72,15 +114,14 @@ export interface OptionMethods<T> {
    * Option.none().unwrap()
    * // => throws NoneUnwrapError('...')
    */
-  unwrap(): T
+  unwrap(): TValue;
 
   /**
    * Returns the contained `Some` value.
    *
    * @group Extraction
    *
-   * @param message - A custom error message provided if the value is `None`.
-   * @returns {T} The contained value.
+   * @param reason - A custom error message provided if the value is `None`.
    * @throws {NoneUnwrapError} If the value is `None`, with the provided custom message.
    *
    * @example
@@ -88,7 +129,7 @@ export interface OptionMethods<T> {
    * Option.none().expect('Custom error message')
    * // => throws NoneUnwrapError('Custom error message')
    */
-  expect(message: string): T
+  expect(reason: string): TValue;
 
   /**
    * Returns the contained `Some` value or a provided default.
@@ -97,13 +138,12 @@ export interface OptionMethods<T> {
    *
    * @template U
    * @param defaultValue - The default value to return if the option is `None`.
-   * @returns {T | U}
    *
    * @example
    * Option.some(42).unwrapOr(99) // => 42
    * Option.none().unwrapOr(99)   // => 99
    */
-  unwrapOr<U>(defaultValue: U): T | U
+  unwrapOr<U>(defaultValue: U): TValue | U;
 
   /**
    * Returns the contained `Some` value or computes it from a closure.
@@ -111,14 +151,14 @@ export interface OptionMethods<T> {
    * @group Extraction
    *
    * @template U
-   * @param fn - The function to execute if the option is `None`.
-   * @returns {T | U}
+   * @param fallback - The
+   * function to execute if the option is `None`.
    *
    * @example
    * Option.some(42).unwrapOrElse(() => 99) // => 42
    * Option.none().unwrapOrElse(() => 99)     // => 99
    */
-  unwrapOrElse<U>(fn: () => U): T | U
+  unwrapOrElse<U = TValue>(fallback: () => U): TValue | U;
 
   // #endregion
 
@@ -131,14 +171,14 @@ export interface OptionMethods<T> {
    * @group Transformation
    *
    * @template U
-   * @param fn - The function to apply to the contained value.
-   * @returns {IOption<U>}
+   *
+   * @param mapper - The function to apply to the contained value.
    *
    * @example
    * Option.some("Hello").map((s) => s.length) // => Some(5)
    * Option.none().map((s) => s.length)        // => None
    */
-  map<U>(fn: (value: T) => U): IOption<U>
+  map<U>(mapper: (value: TValue) => U): Option<U>;
 
   /**
    * Returns the provided default result (if `None`),
@@ -147,15 +187,14 @@ export interface OptionMethods<T> {
    * @group Transformation
    *
    * @template U
-   * @param fn - The function to apply to the contained value.
+   * @param mapper - The function to apply to the contained value.
    * @param defaultValue - The default fallback value.
-   * @returns {U}
    *
    * @example
    * Option.some("Hello").mapOr((s) => s.length, 0) // => 5
    * Option.none().mapOr((s) => s.length, 0)        // => 0
    */
-  mapOr<U>(fn: (value: T) => U, defaultValue: U): U
+  mapOr<U>(mapper: (value: TValue) => U, defaultValue: U): U;
 
   /**
    * Computes a default function result (if `None`),
@@ -164,15 +203,15 @@ export interface OptionMethods<T> {
    * @group Transformation
    *
    * @template U
-   * @param fn - The function to apply to the contained value.
-   * @param defaultFn - The fallback function to compute a default value.
-   * @returns {U}
+   *
+   * @param someMapper - The function to apply to the contained value.
+   * @param noneMapper - The fallback function to compute a default value.
    *
    * @example
    * Option.some("Hello").mapOrElse((s) => s.length, () => 0) // => 5
    * Option.none().mapOrElse((s) => s.length, () => 0)        // => 0
    */
-  mapOrElse<U>(fn: (value: T) => U, defaultFn: () => U): U
+  mapOrElse<U>(someMapper: (value: TValue) => U, noneMapper: () => U): U;
 
   /**
    * Returns `None` if the option is `None`, otherwise calls the predicate with the wrapped value and returns:
@@ -181,14 +220,13 @@ export interface OptionMethods<T> {
    *
    * @group Transformation
    *
-   * @param predicate - The condition the inner value must satisfy.
-   * @returns {IOption<T>}
+   * @param condition - The condition the inner value must satisfy.
    *
    * @example
    * Option.some(10).filter((val) => val > 5) // => Some(10)
    * Option.some(10).filter((val) => val > 15) // => None
    */
-  filter(predicate: (value: T) => boolean): IOption<T>
+  filter(condition: (value: TValue) => boolean): Option<TValue>;
 
   /**
    * Converts from `Option<Option<T>>` to `Option<T>`.
@@ -196,13 +234,12 @@ export interface OptionMethods<T> {
    * @group Transformation
    *
    * @template U
-   * @returns {IOption<U>}
    *
    * @example
    * Option.some(Option.some(10)).flatten() // => Some(10)
    * Option.some(Option.none()).flatten()   // => None
    */
-  flatten(this: IOption<IOption<T>>): IOption<T>
+  flatten<U>(this: Option<Option<U>>): Option<U>;
 
   // #endregion
 
@@ -215,13 +252,12 @@ export interface OptionMethods<T> {
    *
    * @template U
    * @param other - The option to return if the current one is `Some`.
-   * @returns {IOption<U>}
    *
    * @example
    * Option.some(10).and(Option.some(20)) // => Some(20)
    * Option.some(10).and(Option.none())   // => None
    */
-  and<U>(other: IOption<U>): IOption<U>
+  and<U>(other: Option<U>): Option<U>;
 
   /**
    * Returns `None` if the option is `None`, otherwise calls `fn` with the wrapped value and returns the result.
@@ -230,14 +266,14 @@ export interface OptionMethods<T> {
    * @group Alternation
    *
    * @template U
-   * @param fn - The function returning an Option to apply to the contained value.
-   * @returns {IOption<U>}
+   *
+   * @param next - The function returning an Option to apply to the contained value.
    *
    * @example
    * Option.some(10).andThen((val) => Option.some(val + 10)) // => Some(20)
    * Option.some(10).andThen((val) => Option.none())         // => None
    */
-  andThen<U>(fn: (value: T) => IOption<U>): IOption<U>
+  andThen<U>(next: (value: TValue) => Option<U>): Option<U>;
 
   /**
    * Returns the option if it contains a value, otherwise returns the `other` option.
@@ -245,14 +281,14 @@ export interface OptionMethods<T> {
    * @group Alternation
    *
    * @template U
+   *
    * @param other - The fallback option.
-   * @returns {IOption<T | U>}
    *
    * @example
    * Option.some(10).or(Option.some(20)) // => Some(10)
    * Option.some(10).or(Option.none())   // => Some(10)
    */
-  or<U>(other: IOption<U>): IOption<T | U>
+  or<U>(other: Option<U>): Option<TValue | U>;
 
   /**
    * Returns the option if it contains a value, otherwise calls `fn` and returns the result.
@@ -260,14 +296,14 @@ export interface OptionMethods<T> {
    * @group Alternation
    *
    * @template U
-   * @param fn - The fallback function returning an Option.
-   * @returns {IOption<T | U>}
+   *
+   * @param fallback - The fallback function returning an Option.
    *
    * @example
    * Option.some(10).orElse(() => Option.some(20)) // => Some(10)
    * Option.some(10).orElse(() => Option.none())   // => Some(10)
    */
-  orElse<U>(fn: () => IOption<U>): IOption<T | U>
+  orElse<U>(fallback: () => Option<U>): Option<TValue | U>;
 
   // #endregion
 
@@ -280,29 +316,29 @@ export interface OptionMethods<T> {
    *
    * @template U
    * @param other - The other option to zip with.
-   * @returns {IOption<[T, U]>}
    *
    * @example
    * Option.some(10).zip(Option.some(20)) // => Some([10, 20])
    * Option.some(10).zip(Option.none())   // => None
    */
-  zip<U>(other: IOption<U>): IOption<[T, U]>
+  zip<U>(other: Option<U>): Option<[TValue, U]>;
 
   /**
    * Zips the current option with another option, applying the given function if both are `Some`.
    *
    * @group Combination
    *
-   * @template U, R
+   * @template U - The type of the second option.
+   * @template R - The type of the result.
+   *
    * @param other - The other option.
-   * @param fn - The function to combine the two values.
-   * @returns {IOption<R>}
+   * @param combine - The function to combine the two values.
    *
    * @example
    * Option.some(10).zipWith(Option.some(20), (a, b) => a + b) // => Some(30)
    * Option.some(10).zipWith(Option.none(), (a, b) => a + b)   // => None
    */
-  zipWith<U, R>(other: IOption<U>, fn: (a: T, b: U) => R): IOption<R>
+  zipWith<U, R>(other: Option<U>, combine: (value: TValue, otherValue: U) => R): Option<R>;
 
   // #endregion
 
@@ -315,7 +351,6 @@ export interface OptionMethods<T> {
    *
    * @template U
    * @param handlers - An object containing the `some` and `none` callback functions.
-   * @returns {U}
    *
    * @example
    * const val = Option.some(5).match({
@@ -323,35 +358,33 @@ export interface OptionMethods<T> {
    *   none: () => 0
    * }); // => 10
    */
-  match<U>(handlers: { some: (value: T) => U; none: () => U }): U
+  match<U>(cases: MatchCases<TValue, U>): U;
 
   /**
    * Calls the provided closure with a reference to the contained value (if `Some`), and returns the original option.
    *
    * @group Inspection
    *
-   * @param fn - The function to execute for side-effects.
-   * @returns {IOption<T>}
+   * @param action - The function to execute for side-effects.
    *
    * @example
    * Option.some(10).inspect((val) => console.log('got: ' + val))
    * // => Some(10)
    */
-  inspect(fn: (value: T) => void): IOption<T>
+  inspect(action: (value: TValue) => void): this;
 
   /**
    * Alias for `inspect`. Useful for side-effects in chaining.
    *
    * @group Inspection
    *
-   * @param fn - The function to execute for side-effects.
-   * @returns {IOption<T>}
+   * @param action - The function to execute for side-effects.
    *
    * @example
    * Option.some(10).tap((val) => console.log('got: ' + val))
    * // => Some(10)
    */
-  tap(fn: (value: T) => void): IOption<T>
+  tap(action: (value: TValue) => void): this;
 
   // #endregion
 
@@ -362,61 +395,33 @@ export interface OptionMethods<T> {
    *
    * @group Conversion
    *
-   * @returns {T | null}
-   *
    * @example
    * Option.some(10).toNullable() // => 10
    * Option.none().toNullable()   // => null
    */
-  toNullable(): T | null
+  toNullable(): TValue | null;
 
   /**
    * Converts the Option into an undefined value (`T | undefined`).
    *
    * @group Conversion
    *
-   * @returns {T | undefined}
-   *
    * @example
    * Option.some(10).toUndefined() // => 10
    * Option.none().toUndefined()   // => undefined
    */
-  toUndefined(): T | undefined
+  toUndefined(): TValue | undefined;
 
-  // TODO: implement these methods
-  // toString(): string
-  // toValue(): T
-  // toJSON(): T
+  /**
+   * Returns a string representation of the Option.
+   *
+   * @group Conversion
+   *
+   * @example
+   * Option.some(10).toString() // => 'Some(10)'
+   * Option.none().toString()   // => 'None'
+   */
+  toString(): string;
 
   // #endregion
 }
-
-/**
- * Represents an option that contains a value.
- *
- * @template T
- */
-export interface ISome<T> extends OptionMethods<T> {
-  readonly _tag: 'Some'
-}
-
-/**
- * Represents an option that does not contain a value.
- */
-export interface INone extends OptionMethods<never> {
-  readonly _tag: 'None'
-}
-
-/**
- * Represents an option that may or may not contain a value.
- *
- * @template T
- */
-export type IOption<T> = ISome<T> | INone
-
-/**
- * Represents an async option that may or may not contain a value.
- *
- * @template T
- */
-export type IAsyncOption<T> = Promise<IOption<T>>

@@ -13,7 +13,7 @@ A lightweight, type-safe library inspired by Rust's `Option` enum for handling o
 
 - **Type-safe by design**: Eliminates unsafe `null`/`undefined` access by enforcing explicit handling.
 - **Composable API**: Chainable methods like `map`, `andThen`, `filter`, `unwrapOr`, and more.
-- **Singleton `None`**: Single shared instance for better memory usage.
+- **Singleton `NONE`**: Single shared instance for better memory usage.
 - **TypeScript-first**: Fully typed with excellent inference.
 - **Tiny footprint**: Zero dependencies and minimal bundle size.
 
@@ -27,14 +27,27 @@ npm install @eriveltondasilva/option.js
 bun add @eriveltondasilva/option.js
 ```
 
+## Import
+
+```typescript
+// Recommended
+import { Option } from '@eriveltondasilva/option.js'
+
+// Default Import
+import Option from '@eriveltondasilva/option.js'
+
+// Named Helpers - shortcuts for Option.some() and Option.none()
+import { some, none } from '@eriveltondasilva/option.js'
+
+// Types
+import type { Option, AsyncOption, Some, None } from '@eriveltondasilva/option.js'
+```
+
 ## Usage
 
 ### Basic Example
 
 ```typescript
-import { Option } from '@eriveltondasilva/option.js'
-// import Option from '@eriveltondasilva/option.js'
-
 function getUsername(id: number): Option<string> {
   const users = { 1: 'Erivelton' }
   return Option.fromNullable(users[id])
@@ -44,7 +57,8 @@ const user = getUsername(1)
   .map((name) => name.toUpperCase())
   .unwrapOr('ANONYMOUS')
 
-console.log(user) // => "ERIVELTON"
+console.log(user)
+// => log "ERIVELTON"
 ```
 
 ### Chaining with `and()` and `andThen()`
@@ -77,6 +91,7 @@ const message = result.match({
 
 - `Option.some(val)`: Wraps a value.
 - `Option.none()`: The singleton instance for absent values.
+- `Option.fromTry(fn)`: Creates an Option from a function that may throw.
 - `Option.fromNullable(val)`: Safely converts `null` | `undefined` to `None`.
 
 ### Guards

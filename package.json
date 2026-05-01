@@ -1,6 +1,6 @@
 {
   "name": "@eriveltondasilva/option.js",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A lightweight, type-safe library inspired by Rust's `Option` enum for handling optional values in JavaScript and TypeScript without `null` or `undefined` pitfalls.",
   "keywords": [
     "option.js",
@@ -33,18 +33,13 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
-    "dist",
-    "README.md",
-    "LICENSE.md",
-    "CHANGELOG.md",
-    "package.json"
+    "dist"
   ],
   "scripts": {
     "build": "bun run clean && tsup",
-    "clean": "rimraf dist",
+    "clean": "bun run --bun rm -rf dist",
     "prepublishOnly": "NODE_ENV=production bun run build",
-    "postversion": "git push --follow-tags",
-    "dev": "bun run types && bun run check:fix && bun run test",
+    "1xxx": "",
     "fmt": "bunx --bun @biomejs/biome format .",
     "fmt:fix": "bunx --bun @biomejs/biome format --write .",
     "lint": "bunx --bun @biomejs/biome lint .",
@@ -52,19 +47,21 @@
     "check": "bunx --bun @biomejs/biome check .",
     "check:fix": "bunx --bun @biomejs/biome check --write .",
     "check:ci": "bunx --bun @biomejs/biome ci .",
-    "prepare": "bunx husky install",
+    "2xxx": "",
     "test": "vitest run",
     "test:watch": "vitest",
-    "types": "tsc --noEmit"
+    "3xxx": "",
+    "types": "tsc --noEmit -p tsconfig.json",
+    "dev": "bun run types && bun run check:fix && bun run test",
+    "prepare": "bunx husky install"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.4.12",
+    "@biomejs/biome": "^2.4.13",
     "@tsconfig/bun": "^1.0.10",
     "@types/bun": "^1.3.13",
     "husky": "^9.1.7",
     "lint-staged": "^16.4.0",
     "publint": "^0.3.18",
-    "rimraf": "^6.1.3",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3",
     "vitest": "^4.1.5"

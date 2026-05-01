@@ -1,25 +1,28 @@
-import { NoneUnwrapError } from './errors.ts'
-import type { INone, IOption, ISome } from './types.ts'
+import type { None, Option, Some } from './types';
+import type { MatchCases } from './types/methods';
 
-class None implements INone {
-  readonly _tag = 'None'
+import { TAG } from './brand';
+import { NoneUnwrapError } from './utils';
+
+class NoneClass implements None {
+  readonly _tag = TAG.None;
 
   // #region Type Guards
 
-  isSome(): this is ISome<never> {
-    return false
+  isSome(): this is Some<never> {
+    return false;
   }
 
-  isNone(): this is INone {
-    return true
+  isNone(): this is None {
+    return true;
   }
 
-  isSomeAnd(_predicate: (value: never) => boolean): boolean {
-    return false
+  isSomeAnd(_condition: (value: never) => boolean): boolean {
+    return false;
   }
 
-  isNoneOr(_predicate: (value: never) => boolean): boolean {
-    return true
+  isNoneOr(_condition: (value: never) => boolean): boolean {
+    return true;
   }
 
   // #endregion
@@ -27,19 +30,19 @@ class None implements INone {
   // #region Extraction
 
   unwrap(): never {
-    throw new NoneUnwrapError()
+    throw new NoneUnwrapError();
   }
 
-  expect(message: string): never {
-    throw new NoneUnwrapError(message)
+  expect(reason: string): never {
+    throw new NoneUnwrapError(reason);
   }
 
   unwrapOr<U>(defaultValue: U): U {
-    return defaultValue
+    return defaultValue;
   }
 
   unwrapOrElse<U>(fn: () => U): U {
-    return fn()
+    return fn();
   }
 
   // #endregion
@@ -47,71 +50,71 @@ class None implements INone {
   // #region Transformation
 
   map<U>(_fn: (value: never) => U): this {
-    return this
+    return this;
   }
 
   mapOr<U>(_fn: (value: never) => U, defaultValue: U): U {
-    return defaultValue
+    return defaultValue;
   }
 
   mapOrElse<U>(_fn: (value: never) => U, defaultFn: () => U): U {
-    return defaultFn()
+    return defaultFn();
   }
 
   filter(_predicate: (value: never) => boolean): this {
-    return this
+    return this;
   }
 
-  flatten(): this {
-    return this
+  flatten<U>(this: None): Option<U> {
+    return this;
   }
 
   // #endregion
 
   // #region Alternation
 
-  and<U>(_other: IOption<U>): this {
-    return this
+  and<U>(_other: Option<U>): this {
+    return this;
   }
 
-  andThen<U>(_fn: (value: never) => IOption<U>): this {
-    return this
+  andThen<U>(_fn: (value: never) => Option<U>): this {
+    return this;
   }
 
-  or<U>(other: IOption<U>): IOption<U> {
-    return other
+  or<U>(other: Option<U>): Option<U> {
+    return other;
   }
 
-  orElse<U>(fn: () => IOption<U>): IOption<U> {
-    return fn()
+  orElse<U>(fn: () => Option<U>): Option<U> {
+    return fn();
   }
 
   // #endregion
 
   // #region Combination
 
-  zip<U>(_other: IOption<U>): IOption<[never, U]> {
-    return this
+  zip<U>(_other: Option<U>): this {
+    return this;
   }
 
-  zipWith<U, R>(_other: IOption<U>, _fn: (a: never, b: U) => R): IOption<R> {
-    return this
+  zipWith<U, R>(_other: Option<U>, _fn: (value: never, otherValue: U) => R): this {
+    return this;
   }
 
   // #endregion
 
   // #region Inspection
 
-  match<U>(handlers: { some: (value: never) => U; none: () => U }): U {
-    return handlers.none()
+  match<U>(cases: MatchCases<never, U>): U {
+    return cases.none();
   }
 
   inspect(_fn: (value: never) => void): this {
-    return this
+    return this;
   }
 
   tap(_fn: (value: never) => void): this {
-    return this
+    return this;
   }
 
   // #endregion
@@ -119,15 +122,26 @@ class None implements INone {
   // #region Conversion
 
   toNullable(): null {
-    return null
+    return null;
   }
 
   toUndefined(): undefined {
-    return undefined
+    return undefined;
+  }
+
+  toString(): string {
+    return 'None';
+  }
+
+  toJSON(): { type: 'none'; value: undefined } {
+    return {
+      type: 'none',
+      value: undefined,
+    };
   }
 
   // #endregion
 }
 
 // # Singleton — None é imutável e não carrega estado
-export const NoneClass = new None()
+export const NONE = new NoneClass();
