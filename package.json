@@ -39,7 +39,6 @@
     "build": "bun run clean && tsup",
     "clean": "bun run --bun rm -rf dist",
     "prepublishOnly": "NODE_ENV=production bun run build",
-    "postversion": "git push --follow-tags",
     "1xxx": "",
     "fmt": "bunx --bun @biomejs/biome format .",
     "fmt:fix": "bunx --bun @biomejs/biome format --write .",
