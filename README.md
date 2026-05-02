@@ -1,7 +1,7 @@
 # Option.js
 
 [![npm version](https://img.shields.io/npm/v/@eriveltondasilva/option.js)](https://www.npmjs.com/package/@eriveltondasilva/option.js)
-[![npm size](https://img.shields.io/npm/unpacked-size/@eriveltondasilva/option.js)](https://www.npmjs.com/package/@eriveltondasilva/option.js)
+[![npm package minimized gzipped size (scoped)](https://img.shields.io/bundlejs/size/%40eriveltondasilva/option.js?format=both)](https://www.npmjs.com/package/@eriveltondasilva/option.js)
 [![Pull Request](https://github.com/eriveltondasilva/option.js/actions/workflows/pull-request.yml/badge.svg)](https://github.com/eriveltondasilva/option.js/actions/workflows/pull-request.yml)
 [![Checked with Biome](https://img.shields.io/badge/Checked_with-Biome-60a5fa?logo=biome)](https://biomejs.dev)
 [![Zero Dependencies](https://img.shields.io/badge/dependencies-0-green)](https://www.npmjs.com/package/@eriveltondasilva/option.js)
