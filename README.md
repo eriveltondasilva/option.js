@@ -30,14 +30,11 @@ bun add @eriveltondasilva/option.js
 ## Import
 
 ```typescript
-// Recommended
-import { Option } from '@eriveltondasilva/option.js'
+// Named imports (recommended — better tree-shaking)
+import { some, none } from '@eriveltondasilva/option.js'
 
 // Default Import
 import Option from '@eriveltondasilva/option.js'
-
-// Named Helpers - shortcuts for Option.some() and Option.none()
-import { some, none } from '@eriveltondasilva/option.js'
 
 // Types
 import type { Option, AsyncOption, Some, None } from '@eriveltondasilva/option.js'

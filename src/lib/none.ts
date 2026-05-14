@@ -1,11 +1,12 @@
-import type { None, Option, Some } from './types';
-import type { MatchCases } from './types/methods';
+import type { None, Option, Some } from '@/types';
+import type { MatchCases } from '@/types/methods';
 
-import { TAG } from './brand';
-import { NoneUnwrapError } from './utils';
+import { NoneUnwrapError } from './errors';
+
+export const TAG = Symbol('Option.None');
 
 class NoneClass implements None {
-  readonly _tag = TAG.None;
+  readonly [TAG] = true;
 
   // #region Type Guards
 
