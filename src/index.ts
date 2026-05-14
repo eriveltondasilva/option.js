@@ -1,6 +1,8 @@
 import type { Option as _Option } from './types';
 
-import { option } from './option';
+import * as api from './api';
+
+// ─── Namespace API ───────────────────────────────────────────────────────────
 
 /**
  * Type-safe optional values inspired by Rust's `Option<T>`.
@@ -54,9 +56,24 @@ import { option } from './option';
  * Option.values([some(1), none()])
  * // => [1]
  */
-export const Option = Object.freeze(option);
+export const Option: typeof api = Object.freeze({ ...api });
 
-export const { some, none } = option;
+// ─── Creation ────────────────────────────────────────────────────────────────
+
+export { fromNullable, fromPromise, fromTry, none, some, validate } from './api/creation';
+
+// ─── Collection ──────────────────────────────────────────────────────────────
+
+export { all, collect, values } from './api/collection';
+
+// ─── Type Guards ─────────────────────────────────────────────────────────────
+
+export { isNone, isOption, isSome } from './api/type-guards';
+
+// ─── Other ───────────────────────────────────────────────────────────────────
+
+export { NoneUnwrapError, ResultTypeError } from './lib/errors';
+
 export type Option<T> = _Option<T>;
 
 export type { AsyncOption, None, Some } from './types';

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { formatForDisplay, isEmptyArray, NoneUnwrapError, ResultTypeError } from '@/utils';
+import { NoneUnwrapError, ResultTypeError } from '@/lib/errors';
+import { formatForDisplay, isEmptyArray } from '@/lib/utils';
 
 // ---------------------------------------------------------------------------
 // NoneUnwrapError

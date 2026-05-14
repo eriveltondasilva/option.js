@@ -1,12 +1,13 @@
-import type { None as _None, Some as _Some, Option } from './types';
-import type { MatchCases } from './types/methods';
+import type { None, Option, Some } from '@/types';
+import type { MatchCases } from '@/types/methods';
 
-import { TAG } from './brand';
 import { NONE } from './none';
 import { formatForDisplay } from './utils';
 
-export class Some<T> implements _Some<T> {
-  readonly _tag = TAG.Some;
+export const TAG = Symbol('Option.Some');
+
+export class SomeClass<T> implements Some<T> {
+  readonly [TAG] = true;
   readonly #value: T;
 
   constructor(value: T) {
@@ -15,11 +16,11 @@ export class Some<T> implements _Some<T> {
 
   // #region Type Guards
 
-  isSome(): this is _Some<T> {
+  isSome(): this is Some<T> {
     return true;
   }
 
-  isNone(): this is _None {
+  isNone(): this is None {
     return false;
   }
 
@@ -56,7 +57,7 @@ export class Some<T> implements _Some<T> {
   // #region Transformation
 
   map<U>(fn: (value: T) => U): Option<U> {
-    return new Some(fn(this.#value));
+    return new SomeClass(fn(this.#value));
   }
 
   mapOr<U>(fn: (value: T) => U, _defaultValue: U): U {
@@ -71,7 +72,7 @@ export class Some<T> implements _Some<T> {
     return predicate(this.#value) ? this : NONE;
   }
 
-  flatten<U>(this: _Some<Option<U>>): Option<U> {
+  flatten<U>(this: Some<Option<U>>): Option<U> {
     return this.unwrap();
   }
 
@@ -100,11 +101,11 @@ export class Some<T> implements _Some<T> {
   // #region Combination
 
   zip<U>(other: Option<U>): Option<[T, U]> {
-    return other.isSome() ? new Some<[T, U]>([this.#value, other.unwrap()]) : NONE;
+    return other.isSome() ? new SomeClass<[T, U]>([this.#value, other.unwrap()]) : NONE;
   }
 
   zipWith<U, R>(other: Option<U>, fn: (value: T, otherValue: U) => R): Option<R> {
-    return other.isSome() ? new Some(fn(this.#value, other.unwrap())) : NONE;
+    return other.isSome() ? new SomeClass(fn(this.#value, other.unwrap())) : NONE;
   }
 
   // #endregion

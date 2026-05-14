@@ -1,4 +1,3 @@
-import type { TAG } from '@/brand';
 import type { OptionMethods } from './methods';
 
 /**
@@ -7,9 +6,6 @@ import type { OptionMethods } from './methods';
  * @template TValue
  */
 export interface Some<TValue> extends OptionMethods<TValue> {
-  /** @internal */
-  readonly _tag: typeof TAG.Some;
-
   toJSON(): { type: 'some'; value: TValue };
 }
 
@@ -17,9 +13,6 @@ export interface Some<TValue> extends OptionMethods<TValue> {
  * Represents an option that does not contain a value.
  */
 export interface None extends OptionMethods<never> {
-  /** @internal */
-  readonly _tag: typeof TAG.None;
-
   toJSON(): { type: 'none'; value: undefined };
 }
 
